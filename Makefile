@@ -2,7 +2,8 @@ OUTPUTFILE 	=	smilefetch
 
 INSTALL_DEST	=	/usr/local/bin/
 
-SRCC		=	main.c
+SRCC		=	main.c\
+			getdata.c
 
 SRCO		=	$(SRCC:.c=.o)
 
