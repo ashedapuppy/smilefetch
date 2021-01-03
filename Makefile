@@ -19,17 +19,13 @@ compile:	$(SRCO)
 .PHONY = clean
 clean:
 	rm -f -- $(SRCO)
-
-.PHONY = fclean
-fclean:
-	rm -f -- $(SRCO)
 	rm -f -- $(OUTPUTFILE)
 
 .PHONY = re
-re: 		fclean compile
+re: 		clean compile
 
 .PHONY = uninstall
-uninstall:	fclean
+uninstall:	clean
 	rm -f -- $(INSTALL_DEST)$(OUTPUTFILE)
 
 .PHONY = install
