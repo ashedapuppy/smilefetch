@@ -35,4 +35,4 @@ $ sudo make uninstall
 simply run <code>$ smilefetch</code> and enjoy the efficiency
 
 ## install path
-<code>$ sudo make install</code> copies smilefetch to /usr/bin/smilefetch by default, feel free to modify the INSTALL_DEST variable in the makefile to change that
+<code>$ sudo make install</code> copies smilefetch to /usr/local/smilefetch by default, feel free to modify the INSTALL_DEST variable in the makefile to change that
