@@ -1,7 +1,11 @@
 # smilefetch
 A system info tool written in c
 
-## Why thie project?
+## TODO:
+    - make the square around info always the correct size, whatever the number of columns in the terminal
+    - add ram info and cute colour blocks like neofetch
+
+## Why this project?
 
 I was dissatisfied with the system info tools that were available, especially neofetch, as the use of bash
 greatly slows them down : almost a second to retrieve the necessary information for neofetch, simply unnacceptable.
