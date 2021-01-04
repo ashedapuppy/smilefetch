@@ -104,6 +104,17 @@ void get_shell(char **shell, char *user)
     }
 }
 
+void get_hostname(char **hostname)
+{
+    FILE *hostname_file;
+    if ((hostname_file = fopen("/etc/hostname", "r")) == NULL)
+    {
+        fprintf(stderr, "error opening /etc/hostname\n");
+        exit(1);
+    }
+    fscanf(hostname_file, "%[^\n]", *hostname);
+}
+
 void get_user(char **user)
 {
     FILE *user_name = popen("whoami", "r");

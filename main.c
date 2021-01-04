@@ -17,6 +17,7 @@ int main(int arc, char **arv)
     char *kernel_name = malloc(sizeof(char) * 100);
     char *uptime = malloc(sizeof(char) * 100);
     char *user = malloc(sizeof(char) * 100);
+    char *hostname = malloc(sizeof(char) * 100);
     char *cpu_name = malloc(sizeof(char) * 100);
     char *shell = malloc(sizeof(char) * 100);
 
@@ -24,11 +25,12 @@ int main(int arc, char **arv)
     get_kernel(&kernel_name);
     get_uptime(&uptime);
     get_user(&user);
+    get_hostname(&hostname);
     get_cpuinfo(&cpu_name);
     get_shell(&shell, user);
 
     if (arc == 1){
-        fprintf(stdout,red "User" reset ":" "\t\t%s\n",user);
+        fprintf(stdout,red "%s" reset "@" red "%s\n\n" reset,user, hostname);
         fprintf(stdout,red "Shell" reset ":" "\t\t%s\n",shell);
         fprintf(stdout,red "Distro" reset ":" "\t\t%s\n", os_name);
         fprintf(stdout,red "Kernel" reset ":" "\t\t%s\n", kernel_name);
