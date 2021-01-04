@@ -1,0 +1,11 @@
+Benchmark #1: neofetch --off --disable packages
+  Time (mean ± σ):     170.5 ms ±   8.7 ms    [User: 74.3 ms, System: 22.1 ms]
+  Range (min … max):   160.0 ms … 191.9 ms    100 runs
+ 
+Benchmark #2: smilefetch
+  Time (mean ± σ):       0.9 ms ±   0.1 ms    [User: 0.4 ms, System: 0.0 ms]
+  Range (min … max):     0.8 ms …   2.9 ms    2583 runs
+ 
+Summary
+  'smilefetch' ran
+  190.46 ± 28.20 times faster than 'neofetch --off --disable packages'

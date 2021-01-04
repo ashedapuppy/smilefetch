@@ -28,23 +28,23 @@ int main(int arc, char **arv)
     get_shell(&shell, user);
 
     if (arc == 1){
-        fprintf(stdout,red "user" reset ":" "\t\t%s\n",user);
-        fprintf(stdout,red "shell" reset ":" "\t\t%s\n",shell);
-        fprintf(stdout,red "distro" reset ":" "\t\t%s\n", os_name);
-        fprintf(stdout,red "kernel" reset ":" "\t\t%s\n", kernel_name);
-        fprintf(stdout,red "uptime" reset ":" "\t\t%s\n", uptime);
-        fprintf(stdout,red "cpu" reset ":" "\t\t%s\n", cpu_name);
+        fprintf(stdout,red "User" reset ":" "\t\t%s\n",user);
+        fprintf(stdout,red "Shell" reset ":" "\t\t%s\n",shell);
+        fprintf(stdout,red "Distro" reset ":" "\t\t%s\n", os_name);
+        fprintf(stdout,red "Kernel" reset ":" "\t\t%s\n", kernel_name);
+        fprintf(stdout,red "Uptime" reset ":" "\t\t%s\n", uptime);
+        fprintf(stdout,red "CPU" reset ":" "\t\t%s\n", cpu_name);
         printf("\n\t\t%s████%s████%s████%s████%s████%s████%s████%s████%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
         printf("%s\t\t%s████%s████%s████%s████%s████%s████%s████%s████%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
     } else {
         if (arv[1][0] == '-' && arv[1][1] == 'b') {
             fprintf(stdout,"*---------------------------------------------------------------*\n");
-            fprintf(stdout,"| " red "user" reset ":" "\t\t%s \t\t\t\t\t|\n",user);
-            fprintf(stdout,"| " red "shell" reset ":" "\t%s \t\t\t\t\t\t|\n",shell);
-            fprintf(stdout,"| " red "distro" reset ":" "\t%s \t\t\t\t\t\t|\n", os_name);
-            fprintf(stdout,"| " red "kernel" reset ":" "\t%s \t|\n", kernel_name);
-            fprintf(stdout,"| " red "uptime" reset ":" "\t%s \t\t\t\t|\n", uptime);
-            fprintf(stdout,"| " red "cpu" reset ":" "\t\t%s \t\t|\n", cpu_name);
+            fprintf(stdout,"| " red "User" reset ":" "\t\t%s \t\t\t\t\t|\n",user);
+            fprintf(stdout,"| " red "Shell" reset ":" "\t%s \t\t\t\t\t\t|\n",shell);
+            fprintf(stdout,"| " red "Distro" reset ":" "\t%s \t\t\t\t\t\t|\n", os_name);
+            fprintf(stdout,"| " red "Kernel" reset ":" "\t%s \t|\n", kernel_name);
+            fprintf(stdout,"| " red "Uptime" reset ":" "\t%s \t\t\t|\n", uptime);
+            fprintf(stdout,"| " red "CPU" reset ":" "\t\t%s \t\t|\n", cpu_name);
             fprintf(stdout,"*---------------------------------------------------------------*\n");
         } else if ((arv[1][0] == '-' && arv[1][1] == 'h') || (arv[1][0] == '-' && arv[1][1] == '-' && arv[1][2] == 'h')) {
             fprintf(stdout,"-h:\tprints this help message\n"
