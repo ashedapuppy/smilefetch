@@ -5,7 +5,7 @@ A system info tool written in c
 
 ## TODO:
     - make the square around info always the correct size
-    - add ram info and cute colour blocks like neofetch
+    - add ram info
 
 ## Why this project?
 
