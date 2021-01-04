@@ -30,7 +30,7 @@ int main(int arc, char **arv)
     get_shell(&shell, user);
 
     if (arc == 1){
-        fprintf(stdout,red "%s" reset "@" red "%s\n\n" reset,user, hostname);
+        fprintf(stdout,red "\n%s" reset "@" red "%s\n\n" reset,user, hostname);
         fprintf(stdout,red "Shell" reset ":" "\t\t%s\n",shell);
         fprintf(stdout,red "Distro" reset ":" "\t\t%s\n", os_name);
         fprintf(stdout,red "Kernel" reset ":" "\t\t%s\n", kernel_name);
