@@ -5,7 +5,7 @@ void get_os(char **os_name)
     FILE *os_file;
     if ((os_file = fopen("/etc/os-release", "r")) == NULL)
     {
-        fprintf(stderr, "error opening /etc/os-release");
+        fprintf(stderr, "error opening /etc/os-release\n");
         exit(1);
     }
     fscanf(os_file, "%[^\n]", *os_name);
@@ -22,7 +22,7 @@ void get_kernel(char **kernel_name)
     int i = 0;
     if ((kernel_file = fopen("/proc/version", "r")) == NULL)
     {
-        fprintf(stderr, "error opening /proc/version");
+        fprintf(stderr, "error opening /proc/version\n");
         exit(1);
     }
     fscanf(kernel_file, "%[^\n]", *kernel_name);
@@ -51,15 +51,57 @@ void get_uptime(char **uptime)
     FILE *uptime_file;
     if ((uptime_file = fopen("/proc/uptime", "r")) == NULL)
     {
-        fprintf(stderr, "error opening /proc/uptime");
+        fprintf(stderr, "error opening /proc/uptime\n");
         exit(1);
     }
     fscanf(uptime_file, "%[^ ]", *uptime);
-    int uptime_long = strtol((*uptime), NULL, 10);
+    long uptime_long = strtol((*uptime), NULL, 10);
+    long uptime_days = uptime_long / 86400; // /60 / 60 / 24 to get num of hours
+    long uptime_hours = uptime_long / 3600 % 24; // /60 /60 %24 to get hours - days
+    long uptime_minutes = uptime_long / 60 % 60; // minutes - hours
+    long uptime_seconds = uptime_long % 60;
+    if (uptime_days != 0) {
+        sprintf(*uptime, "%ld days, %ld hours, %ld minutes", uptime_days, uptime_hours, uptime_minutes);
+    } else if (uptime_hours != 0) {
+        sprintf(*uptime, "%ld hours, %ld minutes", uptime_hours, uptime_minutes);
+    } else if (uptime_minutes != 0) {
+        sprintf(*uptime, "%ld minutes, %ld seconds", uptime_minutes, uptime_seconds);
+    } else {
+        fprintf(stderr, "Uptime = 0? sounds like an error\n");
+        exit(1);
+    }
 }
 
-void get_shell(char **shell)
+void get_shell(char **shell, char *user)
 {
+    FILE *shell_file;
+    char *line = malloc(1024);
+    if ((shell_file = fopen("/etc/passwd", "r")) == NULL)
+    {
+        fprintf(stderr, "error opening /etc/passwd\n");
+        exit(1);
+    }
+    while (fgets(line, 1024, shell_file) != NULL)
+    {
+        if (strstr(line, user)) {
+            (*shell) = line;
+            if (strstr((*shell), "bash"))
+                (*shell) = "bash";
+            if (strstr((*shell), "fish"))
+                (*shell) = "fish";
+            if (strstr((*shell), "zsh"))
+                (*shell) = "zsh";
+            if (strstr((*shell), "dash"))
+                (*shell) = "dash";
+            if (strstr((*shell), "ksh"))
+                (*shell) = "ksh";
+            if (strstr((*shell), "csh"))
+                (*shell) = "csh";
+            if (strstr((*shell), "tcsh"))
+                (*shell) = "tcsh";
+            break;
+        }
+    }
 }
 
 void get_user(char **user)
@@ -74,7 +116,7 @@ void get_cpuinfo(char **cpu_name)
     char *line = malloc(1024);
     if ((cpu_name_file = fopen("/proc/cpuinfo", "r")) == NULL)
     {
-        fprintf(stderr, "error opening /proc/cpuinfo");
+        fprintf(stderr, "error opening /proc/cpuinfo\n");
         exit(1);
     }
     while (fgets(line, 1024, cpu_name_file) != NULL)

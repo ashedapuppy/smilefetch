@@ -18,18 +18,24 @@ int main(int arc, char **arv)
     char *uptime = malloc(sizeof(char) * 100);
     char *user = malloc(sizeof(char) * 100);
     char *cpu_name = malloc(sizeof(char) * 100);
+    char *shell = malloc(sizeof(char) * 100);
 
     get_os(&os_name);
     get_kernel(&kernel_name);
     get_uptime(&uptime);
     get_user(&user);
     get_cpuinfo(&cpu_name);
+    get_shell(&shell, user);
 
-    fprintf(stdout,red "user" reset ":" "\t\t%s\n",user);
-    fprintf(stdout,red "distro" reset ":" "\t\t%s\n", os_name);
-    fprintf(stdout,red "kernel" reset ":" "\t\t%s\n", kernel_name);
-    fprintf(stdout,red "uptime" reset ":" "\t\t%s seconds\n", uptime);
-    fprintf(stdout,red "cpu" reset ":" "\t\t%s\n", cpu_name);
+    fprintf(stdout,"*---------------------------------------------------------------*\n");
+    fprintf(stdout,"| " red "user" reset ":" "\t\t%s \t\t\t\t\t|\n",user);
+    fprintf(stdout,"| " red "shell" reset ":" "\t%s \t\t\t\t\t\t|\n",shell);
+    fprintf(stdout,"| " red "distro" reset ":" "\t%s \t\t\t\t\t\t|\n", os_name);
+    fprintf(stdout,"| " red "kernel" reset ":" "\t%s \t|\n", kernel_name);
+    fprintf(stdout,"| " red "uptime" reset ":" "\t%s \t\t\t\t|\n", uptime);
+    fprintf(stdout,"| " red "cpu" reset ":" "\t\t%s \t\t|\n", cpu_name);
+    fprintf(stdout,"*---------------------------------------------------------------*\n");
+
     exit(0);
 }
 
