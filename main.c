@@ -34,8 +34,8 @@ int main(int arc, char **arv)
         fprintf(stdout,red "kernel" reset ":" "\t\t%s\n", kernel_name);
         fprintf(stdout,red "uptime" reset ":" "\t\t%s\n", uptime);
         fprintf(stdout,red "cpu" reset ":" "\t\t%s\n", cpu_name);
-        printf("\n\t\t%s██%s██%s██%s██%s██%s██%s██%s██%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
-        printf("%s\t\t%s██%s██%s██%s██%s██%s██%s██%s██%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
+        printf("\n\t\t%s████%s████%s████%s████%s████%s████%s████%s████%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
+        printf("%s\t\t%s████%s████%s████%s████%s████%s████%s████%s████%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
     } else {
         if (arv[1][0] == '-' && arv[1][1] == 'b') {
             fprintf(stdout,"*---------------------------------------------------------------*\n");
@@ -51,14 +51,14 @@ int main(int arc, char **arv)
                     "-b:\tprints the information with a box\n"
                     "-l:\tprints the information with colour on the side\n");
         } else if ((arv[1][0] == '-' && arv[1][1] == 'l')) {
-            fprintf(stdout,black "██" bold "██\n" reset);
-            fprintf(stdout,red "██" bold "██" reset  red "\tuser" reset ":" "\t\t%s\n",user);
-            fprintf(stdout,green "██" bold "██" reset red "\tshell" reset ":" "\t\t%s\n",shell);
-            fprintf(stdout,yellow "██" bold "██" reset red "\tdistro" reset ":" "\t\t%s\n", os_name);
-            fprintf(stdout,blue "██" bold "██" reset red "\tkernel" reset ":" "\t\t%s\n", kernel_name);
-            fprintf(stdout,magenta "██" bold "██" reset red "\tuptime" reset ":" "\t\t%s\n", uptime);
-            fprintf(stdout,cyan "██" bold "██" reset red "\tcpu" reset ":" "\t\t%s\n", cpu_name);
-            fprintf(stdout,white "██" bold "██\n" reset);
+            fprintf(stdout,black "████" bold "████\n" reset);
+            fprintf(stdout,red "████" bold "████" reset  red " user" reset ":" "\t\t%s\n",user);
+            fprintf(stdout,green "████" bold "████" reset red " shell" reset ":" "\t\t%s\n",shell);
+            fprintf(stdout,yellow "████" bold "████" reset red " distro" reset ":" "\t%s\n", os_name);
+            fprintf(stdout,blue "████" bold "████" reset red " kernel" reset ":" "\t%s\n", kernel_name);
+            fprintf(stdout,magenta "████" bold "████" reset red " uptime" reset ":" "\t%s\n", uptime);
+            fprintf(stdout,cyan "████" bold "████" reset red " cpu" reset ":" "\t\t%s\n", cpu_name);
+            fprintf(stdout,white "████" bold "████\n" reset);
         }
     }
     exit(0);
