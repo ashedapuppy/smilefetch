@@ -46,10 +46,14 @@ simply run <code>$ smilefetch</code> and enjoy the efficiency
 ## average speed
 speed tests done with [hyperfine](https://github.com/sharkdp/hyperfine)
 
-Benchmark #1: smilefetch
-  - Time (mean ± σ):       0.8 ms ±   0.0 ms    [User: 0.4 ms, System: 0.0 ms]
-  - Range (min … max):     0.8 ms …   1.1 ms    2845 runs
+    Benchmark #1: neofetch --off --disable packages
+        Time (mean ± σ):     157.6 ms ±   3.0 ms    [User: 69.0 ms, System: 21.4 ms]
+        Range (min … max):   153.5 ms … 169.5 ms    100 runs
 
-Benchmark #1: neofetch --off --disable packages
-  - Time (mean ± σ):     153.8 ms ±   9.4 ms    [User: 67.0 ms, System: 20.9 ms]
-  - Range (min … max):   144.4 ms … 175.1 ms    100 runs
+    Benchmark #2: smilefetch
+        Time (mean ± σ):       0.9 ms ±   0.0 ms    [User: 0.4 ms, System: 0.0 ms]
+        Range (min … max):     0.8 ms …   1.2 ms    2481 runs
+
+    Summary
+        'smilefetch' ran
+        185.31 ± 10.36 times faster than 'neofetch --off --disable packages'
