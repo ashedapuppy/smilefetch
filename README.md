@@ -4,7 +4,7 @@ A system info tool written in c
 ![smilefetch](https://github.com/sudosmile/smilefetch/blob/master/img.png?raw=true)
 
 ## TODO:
-    - make the square around info always the correct size, whatever the number of columns in the terminal
+    - make the square around info always the correct size
     - add ram info and cute colour blocks like neofetch
 
 ## Why this project?
