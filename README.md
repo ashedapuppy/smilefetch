@@ -42,3 +42,14 @@ simply run <code>$ smilefetch</code> and enjoy the efficiency
 
 ## install path
 <code>$ sudo make install</code> copies smilefetch to /usr/local/smilefetch by default, feel free to modify the INSTALL_DEST variable in the makefile to change that
+
+## average speed
+speed tests done with [hyperfine](https://github.com/sharkdp/hyperfine)
+
+Benchmark #1: smilefetch
+  - Time (mean ± σ):       0.8 ms ±   0.0 ms    [User: 0.4 ms, System: 0.0 ms]
+  - Range (min … max):     0.8 ms …   1.1 ms    2845 runs
+
+Benchmark #1: neofetch --off --disable packages
+  - Time (mean ± σ):     153.8 ms ±   9.4 ms    [User: 67.0 ms, System: 20.9 ms]
+  - Range (min … max):   144.4 ms … 175.1 ms    100 runs
