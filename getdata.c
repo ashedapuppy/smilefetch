@@ -142,3 +142,20 @@ void get_cpuinfo(char **cpu_name)
         }
     }
 }
+
+void get_raminfo(char **ram_str)
+{
+    FILE *ram_file;
+    int total_long;
+    int free_long;
+    int i;
+    long ratio;
+    if ((ram_file = fopen("/proc/meminfo", "r")) == NULL)
+    {
+        fprintf(stderr, "error opening /proc/meminfo\n");
+        exit(1);
+    }
+    fscanf(ram_file, "%[^\n]", *ram_str);
+    for (i; ((*ram_str)[i] >= '0' && (*ram_str)[i] <= '9'); i++);
+    (*ram_str)[i] = '\0';
+}

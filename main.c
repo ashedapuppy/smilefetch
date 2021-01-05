@@ -19,6 +19,7 @@ int main(int arc, char **arv)
     char *user = malloc(sizeof(char) * 100);
     char *hostname = malloc(sizeof(char) * 100);
     char *cpu_name = malloc(sizeof(char) * 100);
+    char *ram_str = malloc(sizeof(char) * 100);
     char *shell = malloc(sizeof(char) * 100);
 
     get_os(&os_name);
@@ -27,6 +28,7 @@ int main(int arc, char **arv)
     get_user(&user);
     get_hostname(&hostname);
     get_cpuinfo(&cpu_name);
+    get_raminfo(&ram_str);
     get_shell(&shell, user);
 
     if (arc == 1){
@@ -36,6 +38,7 @@ int main(int arc, char **arv)
         fprintf(stdout,red "Kernel" reset ":" "\t\t%s\n", kernel_name);
         fprintf(stdout,red "Uptime" reset ":" "\t\t%s\n", uptime);
         fprintf(stdout,red "CPU" reset ":" "\t\t%s\n", cpu_name);
+        /*fprintf(stdout,red "RAM" reset ":" "\t\t%s\n", ram_str);*/
         printf("\n\t\t%s████%s████%s████%s████%s████%s████%s████%s████%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
         printf("%s\t\t%s████%s████%s████%s████%s████%s████%s████%s████%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
     } else {
