@@ -32,15 +32,15 @@ int main(int arc, char **arv)
     get_shell(&shell, user);
 
     if (arc == 1){
-        fprintf(stdout,red "\n%s" reset "@" red "%s\n\n" reset,user, hostname);
+        fprintf(stdout,red "%s" reset "@" red "%s\n\n" reset,user, hostname);
         fprintf(stdout,red "Shell" reset ":" "\t\t%s\n",shell);
         fprintf(stdout,red "Distro" reset ":" "\t\t%s\n", os_name);
         fprintf(stdout,red "Kernel" reset ":" "\t\t%s\n", kernel_name);
         fprintf(stdout,red "Uptime" reset ":" "\t\t%s\n", uptime);
         fprintf(stdout,red "CPU" reset ":" "\t\t%s\n", cpu_name);
         /*fprintf(stdout,red "RAM" reset ":" "\t\t%s\n", ram_str);*/
-        printf("\n\t\t%s████%s████%s████%s████%s████%s████%s████%s████%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
-        printf("%s\t\t%s████%s████%s████%s████%s████%s████%s████%s████%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
+        printf("\n%s██%s██%s██%s██%s██%s██%s██%s██%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
+        printf("%s%s██%s██%s██%s██%s██%s██%s██%s██%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
     } else {
         if (arv[1][0] == '-' && arv[1][1] == 'b') {
             fprintf(stdout,"*---------------------------------------------------------------*\n");
