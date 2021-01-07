@@ -38,7 +38,7 @@ int main(int arc, char **arv)
         fprintf(stdout,red "Kernel" reset ":" "\t\t%s\n", kernel_name);
         fprintf(stdout,red "Uptime" reset ":" "\t\t%s\n", uptime);
         fprintf(stdout,red "CPU" reset ":" "\t\t%s\n", cpu_name);
-        /*fprintf(stdout,red "RAM" reset ":" "\t\t%s\n", ram_str);*/
+        fprintf(stdout,red "RAM" reset ":" "\t\t%s\n", ram_str);
         printf("\n%s██%s██%s██%s██%s██%s██%s██%s██%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
         printf("%s%s██%s██%s██%s██%s██%s██%s██%s██%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
     } else {

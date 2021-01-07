@@ -14,6 +14,7 @@ void get_os(char **os_name)
     (*os_name)++;
     if ((*os_name)[0] == '"')
         (++(*os_name))[strlen(*os_name) - 1] = 0;
+    fclose(os_file);
 }
 
 void get_kernel(char **kernel_name)
@@ -28,6 +29,7 @@ void get_kernel(char **kernel_name)
     fscanf(kernel_file, "%[^\n]", *kernel_name);
     for (i; (*kernel_name)[i] != '('; i++);
     (*kernel_name)[i] = 0;
+    fclose(kernel_file);
 }
 
 /*
@@ -70,6 +72,7 @@ void get_uptime(char **uptime)
         fprintf(stderr, "Uptime = 0? sounds like an error\n");
         exit(1);
     }
+    fclose(uptime_file);
 }
 
 void get_shell(char **shell, char *user)
@@ -102,6 +105,7 @@ void get_shell(char **shell, char *user)
             break;
         }
     }
+    fclose(shell_file);
 }
 
 void get_hostname(char **hostname)
@@ -113,12 +117,14 @@ void get_hostname(char **hostname)
         exit(1);
     }
     fscanf(hostname_file, "%[^\n]", *hostname);
+    fclose(hostname_file);
 }
 
 void get_user(char **user)
 {
     FILE *user_name = popen("whoami", "r");
     fscanf(user_name, "%s", (*user));
+    fclose(user_name);
 }
 
 void get_cpuinfo(char **cpu_name)
@@ -141,21 +147,40 @@ void get_cpuinfo(char **cpu_name)
             break;
         }
     }
+    fclose(cpu_name_file);
+}
+
+long num_from_line(FILE *f)
+{
+    char buff[1024];
+    char *p;
+    long out = 0;
+    fgets(buff, 1024, f);
+    p = buff;
+    while (*p) {
+        if ( isdigit(*p) || ( (*p=='-'||*p=='+') && isdigit(*(p+1))  ) ) {
+            out = strtol(p, &p, 10);
+        } else {
+            p++;
+        }}
+    return out;
 }
 
 void get_raminfo(char **ram_str)
 {
     FILE *ram_file;
-    int total_long;
-    int free_long;
-    int i;
-    long ratio;
+    long total_long;
+    long free_long;
+    float ratio;
     if ((ram_file = fopen("/proc/meminfo", "r")) == NULL)
     {
         fprintf(stderr, "error opening /proc/meminfo\n");
         exit(1);
     }
-    fscanf(ram_file, "%[^\n]", *ram_str);
-    for (i; ((*ram_str)[i] >= '0' && (*ram_str)[i] <= '9'); i++);
-    (*ram_str)[i] = '\0';
+    total_long = num_from_line(ram_file) / 1024;
+    free_long = num_from_line(ram_file) / 1024;
+    ratio = ((total_long - free_long) / (double) total_long) * 100;
+    sprintf(*ram_str, "%ld MiB / %ld MiB (%.1f %%)",
+           total_long - free_long, total_long, ratio);
+    fclose(ram_file);
 }
