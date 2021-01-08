@@ -43,11 +43,17 @@ int main(int arc, char **arv)
         fprintf(stdout,red "Uptime" reset ":" "\t\t%s\n", uptime);
         fprintf(stdout,red "CPU" reset ":" "\t\t%s\n", cpu_name);
         fprintf(stdout,red "RAM" reset ":" "\t\t%s\n", ram_str);
-        printf("\n%s██%s██%s██%s██%s██%s██%s██%s██%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
-        printf("%s%s██%s██%s██%s██%s██%s██%s██%s██%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
+        printf("\n%s██%s██%s██%s██%s██%s██%s██%s██%s\n",
+                black, red, green, yellow, blue,
+                magenta, cyan, white, reset);
+        printf("%s%s██%s██%s██%s██%s██%s██%s██%s██%s\n\n",
+                bold, black, red, green, yellow,
+                blue, magenta, cyan, white, reset);
     } else {
-        if ((arv[1][0] == '-' && arv[1][1] == 'h') || (arv[1][0] == '-' && arv[1][1] == '-' && arv[1][2] == 'h')) {
-            fprintf(stdout,"-h:\tprints this help message\n");
+        if ((arv[1][0] == '-' && arv[1][1] == 'h') ||
+                (arv[1][0] == '-' && arv[1][1] == '-' && arv[1][2] == 'h')) {
+            fprintf(stdout,"-h:\tprints this help message\n"
+                    "-c:\tclears terminal before rendering\n");
         }
         exit(0);
     }
