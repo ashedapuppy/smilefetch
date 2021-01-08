@@ -53,7 +53,7 @@ void get_uptime(char **uptime)
     } else if (up_minutes != 0) {
         sprintf(*uptime, "%ld minutes, %ld seconds", up_minutes, up_seconds);
     } else {
-        sprintf(*uptime, "%ld seconds\n", up_seconds);
+        sprintf(*uptime, "%ld seconds", up_seconds);
     }
     fclose(uptime_file);
 }
