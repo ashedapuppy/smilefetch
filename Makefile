@@ -14,7 +14,7 @@ all:		compile
 
 .PHONY = compile
 compile:	$(SRCO)
-	gcc $(SRCO) -I./include -O2 -Wall -Werror -o $(OUTPUTFILE)
+	gcc $(SRCO) -I./include -O69 -Wall -Werror -o $(OUTPUTFILE)
 
 .PHONY = clean
 clean:
