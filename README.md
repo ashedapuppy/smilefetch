@@ -5,8 +5,8 @@ A system info tool written in c
 
 ## TODO:
 
-<input type="checkbox" disabled /> make the square around info always the correct size
-<input type="checkbox" disabled checked /> add ram info
+- [] make the square around info always the correct size
+- [x] add ram info
 
 ## Why this project?
 
