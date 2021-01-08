@@ -53,8 +53,7 @@ void get_uptime(char **uptime)
     } else if (up_minutes != 0) {
         sprintf(*uptime, "%ld minutes, %ld seconds", up_minutes, up_seconds);
     } else {
-        fprintf(stderr, "Uptime = 0? sounds like an error\n");
-        exit(1);
+        sprintf(*uptime, "%ld seconds\n", up_seconds);
     }
     fclose(uptime_file);
 }
