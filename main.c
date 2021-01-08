@@ -31,7 +31,11 @@ int main(int arc, char **arv)
     get_raminfo(&ram_str);
     get_shell(&shell, user);
 
-    if (arc == 1){
+    if (arc == 1 || (arc == 2 && arv[1][0] == '-' && arv[1][1] == 'c')){
+        if (arc == 2 && arv[1][0] == '-' && arv[1][1] == 'c') {
+            printf("\033[2J");
+            printf ("\033[H");
+        }
         fprintf(stdout,red "%s" reset "@" red "%s\n\n" reset,user, hostname);
         fprintf(stdout,red "Shell" reset ":" "\t\t%s\n",shell);
         fprintf(stdout,red "Distro" reset ":" "\t\t%s\n", os_name);
