@@ -58,6 +58,26 @@ void get_uptime(char **uptime)
     fclose(uptime_file);
 }
 
+void shell_case(char **shell)
+{
+    if (strstr((*shell), "bash"))
+        (*shell) = "bash";
+    else if (strstr((*shell), "fish"))
+        (*shell) = "fish";
+    else if (strstr((*shell), "sh"))
+        (*shell) = "sh";
+    else if (strstr((*shell), "zsh"))
+        (*shell) = "zsh";
+    else if (strstr((*shell), "dash"))
+        (*shell) = "dash";
+    else if (strstr((*shell), "ksh"))
+        (*shell) = "ksh";
+    else if (strstr((*shell), "csh"))
+        (*shell) = "csh";
+    else if (strstr((*shell), "tcsh"))
+        (*shell) = "tcsh";
+}
+
 void get_shell(char **shell, char *user)
 {
     FILE *shell_file;
@@ -69,20 +89,7 @@ void get_shell(char **shell, char *user)
     while (fgets(line, 1024, shell_file) != NULL) {
         if (strstr(line, user)) { //this file is consistent so no need to check
             (*shell) = line;
-            if (strstr((*shell), "bash"))
-                (*shell) = "bash";
-            if (strstr((*shell), "fish"))
-                (*shell) = "fish";
-            if (strstr((*shell), "zsh"))
-                (*shell) = "zsh";
-            if (strstr((*shell), "dash"))
-                (*shell) = "dash";
-            if (strstr((*shell), "ksh"))
-                (*shell) = "ksh";
-            if (strstr((*shell), "csh"))
-                (*shell) = "csh";
-            if (strstr((*shell), "tcsh"))
-                (*shell) = "tcsh";
+            shell_case(&(*shell));
             break;
         }
     }
