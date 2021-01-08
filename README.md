@@ -7,6 +7,7 @@ A system info tool written in c
 
 - [ ] make the square around info always the correct size
 - [x] add ram info
+- [ ] add a cute graphic as option
 
 ## Why this project?
 
