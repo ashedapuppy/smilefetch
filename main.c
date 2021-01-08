@@ -42,30 +42,10 @@ int main(int arc, char **arv)
         printf("\n%s██%s██%s██%s██%s██%s██%s██%s██%s\n", black, red, green, yellow, blue, magenta, cyan, white, reset);
         printf("%s%s██%s██%s██%s██%s██%s██%s██%s██%s\n\n", bold, black, red, green, yellow, blue, magenta, cyan, white, reset);
     } else {
-        if (arv[1][0] == '-' && arv[1][1] == 'b') {
-            fprintf(stdout,"*---------------------------------------------------------------*\n");
-            fprintf(stdout,"| " red "User" reset ":" "\t\t%s \t\t\t\t\t|\n",user);
-            fprintf(stdout,"| " red "Shell" reset ":" "\t%s \t\t\t\t\t\t|\n",shell);
-            fprintf(stdout,"| " red "Distro" reset ":" "\t%s \t\t\t\t\t\t|\n", os_name);
-            fprintf(stdout,"| " red "Kernel" reset ":" "\t%s \t|\n", kernel_name);
-            fprintf(stdout,"| " red "Uptime" reset ":" "\t%s \t\t\t|\n", uptime);
-            fprintf(stdout,"| " red "CPU" reset ":" "\t\t%s \t\t|\n", cpu_name);
-            fprintf(stdout,"*---------------------------------------------------------------*\n");
-        } else if ((arv[1][0] == '-' && arv[1][1] == 'h') || (arv[1][0] == '-' && arv[1][1] == '-' && arv[1][2] == 'h')) {
-            fprintf(stdout,"-h:\tprints this help message\n"
-                    "-b:\tprints the information with a box\n"
-                    "-l:\tprints the information with colour on the side\n");
-        } else if ((arv[1][0] == '-' && arv[1][1] == 'l')) {
-            fprintf(stdout,black "████" bold "████\n" reset);
-            fprintf(stdout,red "████" bold "████" reset  red " user" reset ":" "\t\t%s\n",user);
-            fprintf(stdout,green "████" bold "████" reset red " shell" reset ":" "\t\t%s\n",shell);
-            fprintf(stdout,yellow "████" bold "████" reset red " distro" reset ":" "\t%s\n", os_name);
-            fprintf(stdout,blue "████" bold "████" reset red " kernel" reset ":" "\t%s\n", kernel_name);
-            fprintf(stdout,magenta "████" bold "████" reset red " uptime" reset ":" "\t%s\n", uptime);
-            fprintf(stdout,cyan "████" bold "████" reset red " cpu" reset ":" "\t\t%s\n", cpu_name);
-            fprintf(stdout,white "████" bold "████\n" reset);
+        if ((arv[1][0] == '-' && arv[1][1] == 'h') || (arv[1][0] == '-' && arv[1][1] == '-' && arv[1][2] == 'h')) {
+            fprintf(stdout,"-h:\tprints this help message\n");
         }
+        exit(0);
     }
-    exit(0);
 }
 
