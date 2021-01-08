@@ -4,8 +4,9 @@ A system info tool written in c
 ![smilefetch](https://github.com/sudosmile/smilefetch/blob/master/smile.png?raw=true)
 
 ## TODO:
-    <input type="checkbox" disabled /> make the square around info always the correct size
-    <input type="checkbox" disabled checked /> add ram info
+
+<input type="checkbox" disabled /> make the square around info always the correct size
+<input type="checkbox" disabled checked /> add ram info
 
 ## Why this project?
 
