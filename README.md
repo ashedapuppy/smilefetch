@@ -5,7 +5,7 @@ A system info tool written in c
 
 ## TODO:
 
-- [] make the square around info always the correct size
+- [ ] make the square around info always the correct size
 - [x] add ram info
 
 ## Why this project?
