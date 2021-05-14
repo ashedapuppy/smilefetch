@@ -1,4 +1,4 @@
-#include "include/main.h"
+#include "main.h"
 
 void get_os(char **os_name)
 {
@@ -76,6 +76,8 @@ void shell_case(char **shell)
         (*shell) = "csh";
     else if (strstr((*shell), "tcsh"))
         (*shell) = "tcsh";
+    else
+        (*shell) = "unknown";
 }
 
 void get_shell(char **shell, char *user)

@@ -1,4 +1,4 @@
-#include "include/main.h"
+#include "main.h"
 
 #define reset "\x1b[0m"
 #define bold "\x1b[1m"
@@ -58,4 +58,3 @@ int main(int arc, char **arv)
         exit(0);
     }
 }
-

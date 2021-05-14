@@ -2,32 +2,34 @@ OUTPUTFILE 	=	smilefetch
 
 INSTALL_DEST	=	/usr/local/bin/
 
-SRCC		=	main.c\
-			getdata.c
+SRCC		=	main\
+			getdata
 
-SRCO		=	$(SRCC:.c=.o)
+SRC 		= 	$(addsuffix .c, $(addprefix src/, $(SRCC)))
 
-SRCH		=	./include/main.h
+OBJ            	=       $(SRC:.c=.o)
 
-.PHONY = all
-all:		compile
+CC 		=	gcc
 
-.PHONY = compile
-compile:	$(SRCO)
-	gcc $(SRCO) -I./include -O69 -Wall -Werror -o $(OUTPUTFILE)
+CFLAGS 		=	-W -Wall -Wextra -g3
 
-.PHONY = clean
+CPPFLAGS 	=	-Iinclude/
+
+.PHONY 		=	all, clean, re, uninstall, install
+
+all:		$(OBJ)
+	$(CC) $(OBJ) -o $(OUTPUTFILE)
+
 clean:
-	rm -f -- $(SRCO)
-	rm -f -- $(OUTPUTFILE)
+	$(RM) $(OBJ)
 
-.PHONY = re
-re: 		clean compile
+fclean:		clean
+	$(RM) $(OUTPUTFILE)
 
-.PHONY = uninstall
-uninstall:	clean
-	rm -f -- $(INSTALL_DEST)$(OUTPUTFILE)
+re: 		fclean all
 
-.PHONY = install
+uninstall:	fclean
+	$(RM) $(INSTALL_DEST)$(OUTPUTFILE)
+
 install:	uninstall 	re
 	cp $(OUTPUTFILE) $(INSTALL_DEST)
