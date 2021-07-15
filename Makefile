@@ -1,35 +1,35 @@
-OUTPUTFILE 	=	smilefetch
+OUTPUTFILE = smilefetch
 
-INSTALL_DEST	=	/usr/local/bin/
+INSTALL_DEST = /usr/local/bin/
 
-SRCC		=	main\
-			getdata
+SRC_NAMES = 	main\
+		getdata
 
-SRC 		= 	$(addsuffix .c, $(addprefix src/, $(SRCC)))
+SRC = $(addsuffix .c, $(addprefix src/, $(SRC_NAMES)))
 
-OBJ            	=       $(SRC:.c=.o)
+OBJ = $(SRC:.c=.o)
 
-CC 		=	gcc
+CC = clang
 
-CFLAGS 		=	-W -Wall -Wextra -g3
+CFLAGS = -Wall -Wextra -pedantic -O3 -ansi
 
-CPPFLAGS 	=	-Iinclude/
+CPPFLAGS = -Iinclude/
 
-.PHONY 		=	all, clean, re, uninstall, install
-
-all:		$(OBJ)
+all: $(OBJ)
 	$(CC) $(OBJ) -o $(OUTPUTFILE)
 
 clean:
 	$(RM) $(OBJ)
 
-fclean:		clean
+fclean: clean
 	$(RM) $(OUTPUTFILE)
 
-re: 		fclean all
+re: fclean all
 
-uninstall:	fclean
+uninstall: fclean
 	$(RM) $(INSTALL_DEST)$(OUTPUTFILE)
 
-install:	uninstall 	re
+install: uninstall re
 	cp $(OUTPUTFILE) $(INSTALL_DEST)
+
+.PHONY: all clean re uninstall install

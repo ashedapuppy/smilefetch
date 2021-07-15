@@ -1,20 +1,44 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include <stdio.h> // for reading files
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <ctype.h>
+#define reset "\x1b[0m"
+#define bold "\x1b[1m"
+#define black "\x1b[30m"
+#define red "\x1b[31m"
+#define green "\x1b[32m"
+#define yellow "\x1b[33m"
+#define blue "\x1b[34m"
+#define magenta "\x1b[35m"
+#define cyan "\x1b[36m"
+#define white "\x1b[37m"
 
-// from getdata.c
-void get_os(char **);
-void get_kernel(char **kernel_name);
-void get_uptime(char **uptime);
-void get_shell(char **shell, char *user);
-void get_cpuinfo(char **cpu_name);
-void get_raminfo(char **ram_str);
-void get_hostname(char **hostname);
-void get_user(char **user);
+char *get_os(void);
+char *get_kernel(void);
+char *get_uptime(void);
+char *get_shell(void);
+char *get_hostname(void);
+char *get_user(void);
+char *get_cpuinfo(void);
+char *get_raminfo(void);
 
-#endif /* MAIN_H_ */
+static const char info[] = "smilefetch.\n"
+"A neofetch clone made for speed and efficiency.\n\n"
+"Usage:\n"
+"\tsmilefetch -h\n"
+"\tsmilefetch -c\n\n"
+"Options:\n"
+"\t-h\tShow this screen.\n"
+"\t-c\tClear terminal before printing\n";
+
+typedef struct {
+    char *os;
+    char *kernel;
+    char *uptime;
+    char *shell;
+    char *hostname;
+    char *user;
+    char *cpu_info;
+    char *ram_info;
+} values_t;
+
+#endif/* MAIN_H_ */
