@@ -9,9 +9,9 @@ SRC = $(addsuffix .c, $(addprefix src/, $(SRC_NAMES)))
 
 OBJ = $(SRC:.c=.o)
 
-CC = clang
+CC = tcc
 
-CFLAGS = -Wall -Wextra -pedantic -O3 -ansi
+CFLAGS = -Wall -Wextra -pedantic -Ofast -std=c99
 
 CPPFLAGS = -Iinclude/
 

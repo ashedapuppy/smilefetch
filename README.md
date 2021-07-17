@@ -3,11 +3,13 @@ A system info tool written in c
 
 ![smilefetch](https://github.com/sudosmile/smilefetch/blob/master/smile.png?raw=true)
 
-## TODO:
+## Requirements:
+tcc
 
-- [ ] make the square around info always the correct size
-- [x] add ram info
-- [ ] add a cute graphic as option
+## Updates:
+
+recently improved the flow of the program, it now runs, on average, 3 times faster.
+
 
 ## Why this project?
 

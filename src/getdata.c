@@ -120,8 +120,23 @@ char *get_cpuinfo(void)
     return cpu;
 }
 
-char *get_raminfo(void)
-{
-    /*/proc/meminfo*/
-    return NULL;
-}
+/*
+ *char *get_raminfo(void)
+ *{
+ *    [>/proc/meminfo<]
+ *    char *ram;
+ *    int *array = malloc( 2 * sizeof(int));
+ *    FILE *fp = fopen("/proc/meminfo", "r");
+ *    int i;
+ *    if (!fp) {
+ *        free(array);
+ *        return NULL;
+ *    }
+ *    for (i = 0; i < 2; i++) {
+ *        fscanf(fp, "%d", &array[i]);
+ *    }
+ *    printf("%d / %d", array[0], array[1]);
+ *    fclose(fp);
+ *    return ram;
+ *}
+ */
