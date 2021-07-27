@@ -12,6 +12,7 @@ char *get_os(void)
     size_t line_buf_size = 0;
     size_t line_size;
     FILE *fp = fopen("/etc/os-release", "r");
+
     if (!fp)
         return NULL;
     line_size = getline(&line_buf, &line_buf_size, fp);
@@ -31,6 +32,7 @@ char *get_kernel(void)
     char *line_buf = NULL;
     size_t line_buf_size = 0;
     FILE *fp = fopen("/proc/version", "r");
+
     if (!fp)
         return NULL;
     getline(&line_buf, &line_buf_size, fp);
@@ -48,10 +50,11 @@ char *get_uptime(void)
     int hours;
     int minutes;
     int seconds;
-    char *uptime = malloc(30);
+    char *uptime = malloc(40);
     char *line_buf = NULL;
     size_t line_buf_size = 0;
     FILE *fp = fopen("/proc/uptime", "r");
+
     if (!fp) {
         free(uptime);
         return NULL;
@@ -65,13 +68,14 @@ char *get_uptime(void)
     hours = seconds / 3600;
     seconds %= 3600;
     minutes = seconds / 60;
-    snprintf(uptime, 30, "%d Days %d Hours %d Minutes", days, hours, minutes);
+    snprintf(uptime, 40, "%d Days %d Hours %d Minutes", days, hours, minutes);
     return uptime;
 }
 
 char *get_shell(void)
 {
     char *shell;
+
     shell = strdup(strrchr(getenv("SHELL"), '/') + 1);
     return shell;
 }
@@ -107,6 +111,7 @@ char *get_cpuinfo(void)
     size_t line_buf_size = 0;
     size_t line_size;
     FILE *fp = fopen("/proc/cpuinfo", "r");
+
     if (!fp)
         return NULL;
     line_size = getline(&line_buf, &line_buf_size, fp);
@@ -119,24 +124,3 @@ char *get_cpuinfo(void)
     fclose(fp);
     return cpu;
 }
-
-/*
- *char *get_raminfo(void)
- *{
- *    [>/proc/meminfo<]
- *    char *ram;
- *    int *array = malloc( 2 * sizeof(int));
- *    FILE *fp = fopen("/proc/meminfo", "r");
- *    int i;
- *    if (!fp) {
- *        free(array);
- *        return NULL;
- *    }
- *    for (i = 0; i < 2; i++) {
- *        fscanf(fp, "%d", &array[i]);
- *    }
- *    printf("%d / %d", array[0], array[1]);
- *    fclose(fp);
- *    return ram;
- *}
- */

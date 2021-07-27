@@ -21,8 +21,6 @@ static void clean_values(values_t *all)
         all->uptime = "(null)";
     } if (all->cpu_info == NULL) {
         all->cpu_info = "(null)";
-    } if (all->ram_info == NULL) {
-        all->ram_info = "(null)";
     }
 }
 
@@ -34,7 +32,6 @@ static void print_all(values_t *all)
     printf("%sUptime%s:\t\t%s\n", red, reset, all->uptime);
     printf("%sShell%s:\t\t%s\n", red, reset, all->shell);
     printf("%sCpu%s:\t\t%s\n", red, reset, all->cpu_info);
-    printf("%sRam%s:\t\t%s\n", red, reset, all->ram_info);
     printf("\n%s██%s██%s██%s██%s██%s██%s██%s██%s\n",
             black, red, green, yellow, blue,
             magenta, cyan, white, reset);
@@ -52,7 +49,6 @@ static void free_all(values_t *all)
     free(all->user);
     free(all->shell);
     free(all->cpu_info);
-    /*free(all->ram_info);*/
 }
 
 static void assign_all(values_t *all)
@@ -64,7 +60,6 @@ static void assign_all(values_t *all)
     all->kernel = get_kernel();
     all->uptime = get_uptime();
     all->cpu_info = get_cpuinfo();
-    /*all->ram_info = get_raminfo();*/
 }
 
 int main(int argc, char *argv[])

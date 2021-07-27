@@ -19,7 +19,6 @@ char *get_shell(void);
 char *get_hostname(void);
 char *get_user(void);
 char *get_cpuinfo(void);
-char *get_raminfo(void);
 
 static const char info[] = "smilefetch.\n"
 "A neofetch clone made for speed and efficiency.\n\n"
@@ -38,7 +37,6 @@ typedef struct {
     char *hostname;
     char *user;
     char *cpu_info;
-    char *ram_info;
 } values_t;
 
 #endif/* MAIN_H_ */
