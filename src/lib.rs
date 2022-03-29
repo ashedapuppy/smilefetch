@@ -31,7 +31,6 @@ impl Uptime {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Default)]
 pub struct Data {
     pub os: String,
@@ -52,23 +51,9 @@ pub struct Data {
 // value, it also incidentally makes it easy to expand this to work with any
 // system by using conditional compilation
 impl Data {
-    pub fn print(&self) {
-        println!(
-            "os={}\nkernel={}\nuptime={}\nhostname={}\nshell={}\nuser={}\ncpuinfo={}\nmeminfo={}",
-            self.os,
-            self.kernel,
-            self.uptime,
-            self.hostname,
-            self.shell,
-            self.user,
-            self.cpuinfo,
-            self.meminfo
-        )
-    }
-
     #[must_use]
     pub fn new() -> Self {
-        Data {
+        Self {
             os: Data::get_os(),
             kernel: Data::get_kernel(),
             uptime: Data::get_uptime(),
