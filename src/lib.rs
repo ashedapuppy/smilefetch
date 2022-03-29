@@ -1,5 +1,36 @@
 use std::{env, fs, path};
 
+struct Uptime {
+    days: i32,
+    hours: i32,
+    minutes: i32,
+    seconds: i32,
+}
+
+impl Uptime {
+    #[must_use]
+    /// generates the Uptime struct using the total uptime (in seconds)
+    fn new(total_seconds: f32) -> Self {
+        let mut seconds = total_seconds;
+        let days = seconds / (24f32 * 3600f32);
+        seconds %= 24f32 * 3600f32;
+        let hours = seconds / 3600f32;
+        seconds %= 3600f32;
+        let minutes = seconds / 60f32;
+
+        let days = days as i32;
+        let hours = hours as i32;
+        let minutes = minutes as i32;
+        let seconds = seconds as i32;
+        Self {
+            days,
+            hours,
+            minutes,
+            seconds,
+        }
+    }
+}
+
 #[allow(dead_code)]
 #[derive(Debug, Default)]
 pub struct Data {
@@ -35,6 +66,7 @@ impl Data {
         )
     }
 
+    #[must_use]
     pub fn new() -> Self {
         Data {
             os: Data::get_os(),
@@ -71,29 +103,18 @@ impl Data {
         let file: String = fs::read_to_string("/proc/uptime").unwrap();
         let vec: Vec<&str> = file.split(' ').collect();
 
-        let mut seconds: f64 = vec[0].to_string().parse().unwrap();
-        let days = seconds / (24f64 * 3600f64);
-        seconds %= 24f64 * 3600f64;
-        let hours = seconds / 3600f64;
-        seconds %= 3600f64;
-        let minutes = seconds / 60f64;
-
-        let days = days as i64;
-        let hours = hours as i64;
-        let minutes = minutes as i64;
-        let seconds = seconds as i64;
-
-        let uptime: String = match (days, hours, minutes) {
-            (0i64, 0i64, 0i64) => format!("{} seconds", seconds),
-            (0i64, 0i64, m) => format!("{} minutes", m),
-            (0i64, h, 0i64) => format!("{} hours", h),
-            (0i64, h, m) => format!("{} hours {} minutes", h, m),
-            (d, 0i64, 0i64) => format!("{} days", d),
-            (d, 0i64, m) => format!("{} days {} minutes", d, m),
-            (d, h, 0i64) => format!("{} days {} hours", d, h),
+        let total_seconds = vec[0].to_string().parse().unwrap();
+        let uptime = Uptime::new(total_seconds);
+        match (uptime.days, uptime.hours, uptime.minutes) {
+            (0, 0, 0) => format!("{} seconds", uptime.seconds),
+            (d, 0, 0) => format!("{} days", d),
+            (0, h, 0) => format!("{} hours", h),
+            (0, 0, m) => format!("{} minutes", m),
+            (d, h, 0) => format!("{} days {} hours", d, h),
+            (d, 0, m) => format!("{} days {} minutes", d, m),
+            (0, h, m) => format!("{} hours {} minutes", h, m),
             (d, h, m) => format!("{} days {} hours {} minutes", d, h, m),
-        };
-        uptime
+        }
     }
 
     fn get_hostname() -> String {
