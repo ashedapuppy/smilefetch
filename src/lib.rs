@@ -1,3 +1,4 @@
+use colored::*;
 use std::{env, fs, path};
 
 struct Uptime {
@@ -50,6 +51,49 @@ pub struct Data {
 // it would be easier to maintain if there was a specific function for each
 // value, it also incidentally makes it easy to expand this to work with any
 // system by using conditional compilation
+impl std::fmt::Display for Data {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            r#"{}@{}
+
+{}:		{}
+{}:		{}
+{}:		{}
+{}:		{}
+
+{}{}{}{}{}{}{}{}
+{}{}{}{}{}{}{}{}"#,
+            self.user.bold().blue(),
+            self.hostname.bold().blue(),
+            "Distro".bold().blue(),
+            self.os.bold(),
+            "Kernel".bold().blue(),
+            self.kernel.bold(),
+            "Uptime".bold().blue(),
+            self.uptime.bold(),
+            "Shell".bold().blue(),
+            self.shell.bold(),
+            "██".black(),
+            "██".red(),
+            "██".green(),
+            "██".yellow(),
+            "██".blue(),
+            "██".magenta(),
+            "██".cyan(),
+            "██".white(),
+            "██".bold().black(),
+            "██".bold().red(),
+            "██".bold().green(),
+            "██".bold().yellow(),
+            "██".bold().blue(),
+            "██".bold().magenta(),
+            "██".bold().cyan(),
+            "██".bold().white(),
+        )
+    }
+}
+
 impl Data {
     #[must_use]
     pub fn new() -> Self {
