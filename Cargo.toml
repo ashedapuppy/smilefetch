@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 whoami = "1.2.1"
 colored = "2.0.0"
+clap = { version = "3.1.6", features = ["derive"] }
