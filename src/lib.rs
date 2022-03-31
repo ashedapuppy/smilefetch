@@ -1,5 +1,5 @@
 use colored::*;
-use std::{env, fs, path};
+use std::{env, fmt, fs, path};
 
 pub struct Uptime {
     pub days: i32,
@@ -35,8 +35,8 @@ impl Uptime {
     }
 }
 
-impl std::fmt::Display for Uptime {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Display for Uptime {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
             "{}",
@@ -68,8 +68,8 @@ pub struct Data {
 // it would be easier to maintain if there was a specific function for each
 // value, it also incidentally makes it easy to expand this to work with any
 // system by using conditional compilation
-impl std::fmt::Display for Data {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Display for Data {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
             r#"{}@{}
