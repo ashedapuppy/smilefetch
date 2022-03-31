@@ -1,17 +1,19 @@
 use colored::*;
 use std::{env, fs, path};
 
-struct Uptime {
-    days: i32,
-    hours: i32,
-    minutes: i32,
-    seconds: i32,
+pub struct Uptime {
+    pub days: i32,
+    pub hours: i32,
+    pub minutes: i32,
+    pub seconds: i32,
+    total_seconds: i32,
 }
 
 impl Uptime {
     #[must_use]
     /// generates the Uptime struct using the total uptime (in seconds)
-    fn new(total_seconds: f32) -> Self {
+    pub fn new(total_seconds: f32) -> Self {
+        let total_seconds_int = total_seconds as i32;
         let mut seconds = total_seconds;
         let days = seconds / (24f32 * 3600f32);
         seconds %= 24f32 * 3600f32;
@@ -28,11 +30,31 @@ impl Uptime {
             hours,
             minutes,
             seconds,
+            total_seconds: total_seconds_int,
         }
     }
 }
 
-#[derive(Debug, Default)]
+impl std::fmt::Display for Uptime {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match (self.days, self.hours, self.minutes) {
+                (0, 0, 0) => format!("{} seconds", self.total_seconds),
+                (d, 0, 0) => format!("{} days", d),
+                (0, h, 0) => format!("{} hours", h),
+                (0, 0, m) => format!("{} minutes", m),
+                (d, h, 0) => format!("{} days {} hours", d, h),
+                (d, 0, m) => format!("{} days {} minutes", d, m),
+                (0, h, m) => format!("{} hours {} minutes", h, m),
+                (d, h, m) => format!("{} days {} hours {} minutes", d, h, m),
+            }
+        )
+    }
+}
+
+#[derive(Default)]
 pub struct Data {
     pub os: String,
     pub kernel: String,
@@ -40,13 +62,8 @@ pub struct Data {
     pub hostname: String,
     pub shell: String,
     pub user: String,
-    pub cpuinfo: String,
-    pub meminfo: String,
 }
 
-#[allow(dead_code)]
-#[cfg(all(unix))]
-#[cfg(not(target_vendor = "apple"))]
 // due to the formatting of the files we get the information from, I decided
 // it would be easier to maintain if there was a specific function for each
 // value, it also incidentally makes it easy to expand this to work with any
@@ -94,18 +111,18 @@ impl std::fmt::Display for Data {
     }
 }
 
+// only works on linux (for now)
+#[cfg(target_os = "linux")]
 impl Data {
     #[must_use]
     pub fn new() -> Self {
         Self {
-            os: Data::get_os(),
-            kernel: Data::get_kernel(),
-            uptime: Data::get_uptime(),
-            hostname: Data::get_hostname(),
-            shell: Data::get_shell(),
-            user: Data::get_user(),
-            cpuinfo: String::from(""),
-            meminfo: String::from(""),
+            os: Self::get_os(),
+            kernel: Self::get_kernel(),
+            uptime: Self::get_uptime(),
+            hostname: Self::get_hostname(),
+            shell: Self::get_shell(),
+            user: Self::get_user(),
         }
     }
 
@@ -133,17 +150,7 @@ impl Data {
         let vec: Vec<&str> = file.split(' ').collect();
 
         let total_seconds = vec[0].to_string().parse().unwrap();
-        let uptime = Uptime::new(total_seconds);
-        match (uptime.days, uptime.hours, uptime.minutes) {
-            (0, 0, 0) => format!("{} seconds", uptime.seconds),
-            (d, 0, 0) => format!("{} days", d),
-            (0, h, 0) => format!("{} hours", h),
-            (0, 0, m) => format!("{} minutes", m),
-            (d, h, 0) => format!("{} days {} hours", d, h),
-            (d, 0, m) => format!("{} days {} minutes", d, m),
-            (0, h, m) => format!("{} hours {} minutes", h, m),
-            (d, h, m) => format!("{} days {} hours {} minutes", d, h, m),
-        }
+        Uptime::new(total_seconds).to_string()
     }
 
     fn get_hostname() -> String {
@@ -161,5 +168,21 @@ impl Data {
 
     fn get_user() -> String {
         whoami::username()
+    }
+}
+
+// create empty data struct in case we compile on anything other than linux
+#[cfg(not(target_os = "linux"))]
+impl Data {
+    #[must_use]
+    pub fn new() -> Self {
+        Self {
+            os: String::from(""),
+            kernel: String::from(""),
+            uptime: String::from(""),
+            hostname: String::from(""),
+            shell: String::from(""),
+            user: String::from(""),
+        }
     }
 }
