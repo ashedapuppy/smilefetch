@@ -10,7 +10,6 @@ pub struct Uptime {
 }
 
 impl Uptime {
-    #[must_use]
     /// generates the Uptime struct using the total uptime (in seconds)
     pub fn new(total_seconds: f32) -> Self {
         let total_seconds_int = total_seconds as i32;
@@ -114,7 +113,6 @@ impl fmt::Display for Data {
 // only works on linux (for now)
 #[cfg(target_os = "linux")]
 impl Data {
-    #[must_use]
     pub fn new() -> Self {
         Self {
             os: Self::get_os(),
@@ -171,10 +169,9 @@ impl Data {
     }
 }
 
-// create empty data struct in case we compile on anything other than linux
+// TODO: add data constructor for windows
 #[cfg(not(target_os = "linux"))]
 impl Data {
-    #[must_use]
     pub fn new() -> Self {
         Self {
             os: String::from(""),

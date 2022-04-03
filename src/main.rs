@@ -17,7 +17,7 @@ fn main() {
     let args = Args::parse();
     let data = Data::new();
     if args.clear {
-        if cfg!(unix) {
+        if cfg!(linux) {
             std::process::Command::new("clear").status().unwrap();
         } else if cfg!(windows) {
             std::process::Command::new("cls").status().unwrap();
