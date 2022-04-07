@@ -16,6 +16,11 @@ struct Args {
 fn main() {
     let args = Args::parse();
     let data = Data::new();
+    clear(args);
+    println!("{}", data);
+}
+
+fn clear(args: Args) {
     if args.clear {
         if cfg!(linux) {
             std::process::Command::new("clear").status().unwrap();
@@ -23,5 +28,4 @@ fn main() {
             std::process::Command::new("cls").status().unwrap();
         }
     }
-    println!("{}", data);
 }
