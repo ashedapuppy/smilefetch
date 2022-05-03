@@ -114,7 +114,6 @@ impl fmt::Display for Data {
 // only works on linux (for now)
 #[cfg(target_os = "linux")]
 impl Data {
-    #[must_use]
     pub fn new() -> Self {
         Self {
             os: Self::get_os(),
