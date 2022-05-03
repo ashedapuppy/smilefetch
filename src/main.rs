@@ -1,8 +1,7 @@
-mod lib;
-
-use crate::lib::Data;
-
 use clap::Parser;
+
+mod data;
+use data::Data;
 
 /// fast system info tool
 #[derive(Parser, Debug)]

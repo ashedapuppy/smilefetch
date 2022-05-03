@@ -1,5 +1,6 @@
-use colored::*;
 use std::{env, fmt, fs, path};
+
+use colored::Colorize;
 
 pub struct Uptime {
     pub days: i32,
@@ -12,6 +13,15 @@ pub struct Uptime {
 impl Uptime {
     #[must_use]
     /// generates the Uptime struct using the total uptime (in seconds)
+    /// It takes a float and returns a Time struct.
+    ///
+    /// Arguments:
+    ///
+    /// * `total_seconds`: The total amount of seconds that the timer will count down from.
+    ///
+    /// Returns:
+    ///
+    /// A new instance of the Time struct.
     pub fn new(total_seconds: f32) -> Self {
         let total_seconds_int = total_seconds as i32;
         let mut seconds = total_seconds;
@@ -36,6 +46,8 @@ impl Uptime {
 }
 
 impl fmt::Display for Uptime {
+    /// If the number of days, hours, and minutes are all zero, then print the number of seconds, otherwise
+    /// print the number of days, hours, and minutes properly formatted to only include relevant values.
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
@@ -114,6 +126,12 @@ impl fmt::Display for Data {
 // only works on linux (for now)
 #[cfg(target_os = "linux")]
 impl Data {
+    /// It creates a new instance of the Data struct and assigns the values
+    /// returned by the methods of the Data struct to the struct
+    ///
+    /// Returns:
+    ///
+    /// the struct Data.
     pub fn new() -> Self {
         Self {
             os: Self::get_os(),
@@ -125,10 +143,21 @@ impl Data {
         }
     }
 
+    /// `whoami::distro()` returns a `String` containing the name of the operating system
+    ///
+    /// Returns:
+    ///
+    /// A String
     fn get_os() -> String {
         whoami::distro()
     }
 
+    /// `get_kernel()` reads the first line of `/proc/version` and returns the first three words of that
+    /// line
+    ///
+    /// Returns:
+    ///
+    /// The kernel version.
     fn get_kernel() -> String {
         let mut kernel: String = String::new();
         let file: String = fs::read_to_string("/proc/version").unwrap();
@@ -144,6 +173,12 @@ impl Data {
         kernel
     }
 
+    /// `get_uptime` reads the contents of `/proc/uptime` and returns a `String` containing the uptime in a
+    /// human readable format
+    ///
+    /// Returns:
+    ///
+    /// A string
     fn get_uptime() -> String {
         let file: String = fs::read_to_string("/proc/uptime").unwrap();
         let vec: Vec<&str> = file.split(' ').collect();
@@ -152,10 +187,20 @@ impl Data {
         Uptime::new(total_seconds).to_string()
     }
 
+    /// `get_hostname` returns the hostname of the machine it's running on
+    ///
+    /// Returns:
+    ///
+    /// A String
     fn get_hostname() -> String {
         whoami::hostname()
     }
 
+    /// It gets the shell from the environment variable `SHELL` and returns it as a `String`
+    ///
+    /// Returns:
+    ///
+    /// A string containing the name of the shell.
     fn get_shell() -> String {
         let shell_str = match env::var("SHELL") {
             Ok(s) => s,
@@ -165,12 +210,17 @@ impl Data {
         shell_path.to_str().unwrap().to_string()
     }
 
+    /// `get_user` returns a `String` containing the username of the current user
+    ///
+    /// Returns:
+    ///
+    /// A String
     fn get_user() -> String {
         whoami::username()
     }
 }
 
-// create empty data struct in case we compile on anything other than linux
+/// create empty data struct in case we compile on anything other than linux
 #[cfg(not(target_os = "linux"))]
 impl Data {
     #[must_use]
