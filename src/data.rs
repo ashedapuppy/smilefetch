@@ -2,236 +2,92 @@ use std::{env, fmt, fs, path};
 
 use colored::Colorize;
 
-pub struct Uptime {
-    pub days: i32,
-    pub hours: i32,
-    pub minutes: i32,
-    pub seconds: i32,
-    total_seconds: i32,
+use crate::uptime::Uptime;
+
+pub struct Data<T> {
+    pub name: String,
+    pub value: T,
 }
 
-impl Uptime {
-    #[must_use]
-    /// generates the Uptime struct using the total uptime (in seconds)
-    /// It takes a float and returns a Time struct.
-    ///
-    /// Arguments:
-    ///
-    /// * `total_seconds`: The total amount of seconds that the timer will count down from.
-    ///
-    /// Returns:
-    ///
-    /// A new instance of the Time struct.
-    pub fn new(total_seconds: f32) -> Self {
-        let total_seconds_int = total_seconds as i32;
-        let mut seconds = total_seconds;
-        let days = seconds / (24f32 * 3600f32);
-        seconds %= 24f32 * 3600f32;
-        let hours = seconds / 3600f32;
-        seconds %= 3600f32;
-        let minutes = seconds / 60f32;
-
-        let days = days as i32;
-        let hours = hours as i32;
-        let minutes = minutes as i32;
-        let seconds = seconds as i32;
-        Self {
-            days,
-            hours,
-            minutes,
-            seconds,
-            total_seconds: total_seconds_int,
-        }
+impl<T> Data<T> {
+    pub fn new(name: String, value: T) -> Self {
+        Self { name, value }
     }
 }
 
-impl fmt::Display for Uptime {
-    /// If the number of days, hours, and minutes are all zero, then print the number of seconds, otherwise
-    /// print the number of days, hours, and minutes properly formatted to only include relevant values.
+impl<T> std::fmt::Display for Data<T>
+where
+    T: fmt::Display,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match (self.days, self.hours, self.minutes) {
-                (0, 0, 0) => format!("{} seconds", self.total_seconds),
-                (d, 0, 0) => format!("{} days", d),
-                (0, h, 0) => format!("{} hours", h),
-                (0, 0, m) => format!("{} minutes", m),
-                (d, h, 0) => format!("{} days {} hours", d, h),
-                (d, 0, m) => format!("{} days {} minutes", d, m),
-                (0, h, m) => format!("{} hours {} minutes", h, m),
-                (d, h, m) => format!("{} days {} hours {} minutes", d, h, m),
-            }
-        )
+        write!(f, "{}:\t\t{}\n", self.name.bold().blue(), self.value)
     }
 }
 
-#[derive(Default)]
-pub struct Data {
-    pub os: String,
-    pub kernel: String,
-    pub uptime: String,
-    pub hostname: String,
-    pub shell: String,
-    pub user: String,
+pub(crate) fn get_colors() -> String {
+    format!(
+        "{}{}{}{}{}{}{}{}\n{}{}{}{}{}{}{}{}",
+        "██".black(),
+        "██".red(),
+        "██".green(),
+        "██".yellow(),
+        "██".blue(),
+        "██".magenta(),
+        "██".cyan(),
+        "██".white(),
+        "██".bold().black(),
+        "██".bold().red(),
+        "██".bold().green(),
+        "██".bold().yellow(),
+        "██".bold().blue(),
+        "██".bold().magenta(),
+        "██".bold().cyan(),
+        "██".bold().white(),
+    )
 }
 
-// due to the formatting of the files we get the information from, I decided
-// it would be easier to maintain if there was a specific function for each
-// value, it also incidentally makes it easy to expand this to work with any
-// system by using conditional compilation
-impl fmt::Display for Data {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            r#"{}@{}
-
-{}:		{}
-{}:		{}
-{}:		{}
-{}:		{}
-
-{}{}{}{}{}{}{}{}
-{}{}{}{}{}{}{}{}"#,
-            self.user.bold().blue(),
-            self.hostname.bold().blue(),
-            "Distro".bold().blue(),
-            self.os.bold(),
-            "Kernel".bold().blue(),
-            self.kernel.bold(),
-            "Uptime".bold().blue(),
-            self.uptime.bold(),
-            "Shell".bold().blue(),
-            self.shell.bold(),
-            "██".black(),
-            "██".red(),
-            "██".green(),
-            "██".yellow(),
-            "██".blue(),
-            "██".magenta(),
-            "██".cyan(),
-            "██".white(),
-            "██".bold().black(),
-            "██".bold().red(),
-            "██".bold().green(),
-            "██".bold().yellow(),
-            "██".bold().blue(),
-            "██".bold().magenta(),
-            "██".bold().cyan(),
-            "██".bold().white(),
-        )
-    }
+pub(crate) fn empty_line() -> &'static str {
+    "\n"
 }
 
-// only works on linux (for now)
-#[cfg(target_os = "linux")]
-impl Data {
-    /// It creates a new instance of the Data struct and assigns the values
-    /// returned by the methods of the Data struct to the struct
-    ///
-    /// Returns:
-    ///
-    /// the struct Data.
-    pub fn new() -> Self {
-        Self {
-            os: Self::get_os(),
-            kernel: Self::get_kernel(),
-            uptime: Self::get_uptime(),
-            hostname: Self::get_hostname(),
-            shell: Self::get_shell(),
-            user: Self::get_user(),
-        }
-    }
+pub(crate) fn get_os() -> Data<String> {
+    Data::new("os".to_string(), whoami::distro())
+}
 
-    /// `whoami::distro()` returns a `String` containing the name of the operating system
-    ///
-    /// Returns:
-    ///
-    /// A String
-    fn get_os() -> String {
-        whoami::distro()
-    }
-
-    /// `get_kernel()` reads the first line of `/proc/version` and returns the first three words of that
-    /// line
-    ///
-    /// Returns:
-    ///
-    /// The kernel version.
-    fn get_kernel() -> String {
-        let mut kernel: String = String::new();
-        let file: String = fs::read_to_string("/proc/version").unwrap();
-        for line in file.lines() {
-            let vec: Vec<&str> = line.split(' ').collect();
-            for (i, _) in vec.iter().enumerate().take(3) {
-                kernel.push_str(vec[i]);
-                if i != 2 {
-                    kernel.push(' ')
-                }
+pub(crate) fn get_kernel() -> Data<String> {
+    let mut kernel: String = String::new();
+    let file: String = fs::read_to_string("/proc/version").unwrap();
+    for line in file.lines() {
+        let vec: Vec<&str> = line.split(' ').collect();
+        for (i, _) in vec.iter().enumerate().take(3) {
+            kernel.push_str(vec[i]);
+            if i != 2 {
+                kernel.push(' ')
             }
         }
-        kernel
     }
-
-    /// `get_uptime` reads the contents of `/proc/uptime` and returns a `String` containing the uptime in a
-    /// human readable format
-    ///
-    /// Returns:
-    ///
-    /// A string
-    fn get_uptime() -> String {
-        let file: String = fs::read_to_string("/proc/uptime").unwrap();
-        let vec: Vec<&str> = file.split(' ').collect();
-
-        let total_seconds = vec[0].to_string().parse().unwrap();
-        Uptime::new(total_seconds).to_string()
-    }
-
-    /// `get_hostname` returns the hostname of the machine it's running on
-    ///
-    /// Returns:
-    ///
-    /// A String
-    fn get_hostname() -> String {
-        whoami::hostname()
-    }
-
-    /// It gets the shell from the environment variable `SHELL` and returns it as a `String`
-    ///
-    /// Returns:
-    ///
-    /// A string containing the name of the shell.
-    fn get_shell() -> String {
-        let shell_str = match env::var("SHELL") {
-            Ok(s) => s,
-            Err(_) => panic!("shell not set"),
-        };
-        let shell_path = path::Path::new(&shell_str).file_name().unwrap();
-        shell_path.to_str().unwrap().to_string()
-    }
-
-    /// `get_user` returns a `String` containing the username of the current user
-    ///
-    /// Returns:
-    ///
-    /// A String
-    fn get_user() -> String {
-        whoami::username()
-    }
+    Data::new("kernel".to_string(), kernel)
 }
 
-/// create empty data struct in case we compile on anything other than linux
-#[cfg(not(target_os = "linux"))]
-impl Data {
-    #[must_use]
-    pub fn new() -> Self {
-        Self {
-            os: String::from(""),
-            kernel: String::from(""),
-            uptime: String::from(""),
-            hostname: String::from(""),
-            shell: String::from(""),
-            user: String::from(""),
-        }
-    }
+pub(crate) fn get_uptime() -> Data<Uptime> {
+    let file: String = fs::read_to_string("/proc/uptime").unwrap();
+    let vec: Vec<&str> = file.split(' ').collect();
+
+    let total_seconds = vec[0].to_string().parse().unwrap();
+    Data::new("uptime".to_string(), Uptime::new(total_seconds))
+}
+
+pub(crate) fn get_shell() -> Data<String> {
+    let shell_env = match env::var("SHELL") {
+        Ok(s) => s,
+        Err(_) => panic!("get_shell: shell not set"),
+    };
+    let shell_path = path::Path::new(&shell_env).file_name().unwrap();
+    Data::new(
+        "shell".to_string(),
+        shell_path
+            .to_str()
+            .unwrap_or_else(|| panic!("get_shell: parsing error"))
+            .to_string(),
+    )
 }

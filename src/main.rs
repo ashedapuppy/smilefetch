@@ -1,7 +1,10 @@
 use clap::Parser;
 
 mod data;
-use data::Data;
+mod datalist;
+mod uptime;
+
+use datalist::DataList;
 
 /// fast system info tool
 #[derive(Parser, Debug)]
@@ -14,7 +17,7 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let data = Data::new();
+    let data = DataList::new();
     if args.clear {
         if cfg!(unix) {
             std::process::Command::new("clear").status().unwrap();
