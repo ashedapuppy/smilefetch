@@ -1,6 +1,12 @@
-use std::{env, fmt, fs, path};
+use std::{env, fmt, path};
 
+use proc_getter::cpuinfo::cpuinfo;
+use proc_getter::meminfo::meminfo;
+use proc_getter::uptime::uptime;
+use proc_getter::version::version;
+use pretty_bytes::converter::convert;
 use colored::Colorize;
+use sys_info;
 
 use crate::uptime::Uptime;
 
@@ -52,12 +58,16 @@ pub(crate) fn empty_line() -> &'static str {
 }
 
 pub(crate) fn get_os() -> Data<String> {
-    Data::new("os".to_string(), whoami::distro())
+    let release = sys_info::linux_os_release().unwrap();
+    Data::new(
+        "Os".to_string(),
+        release.pretty_name.unwrap_or_else(|| release.name.unwrap()),
+    )
 }
 
 pub(crate) fn get_kernel() -> Data<String> {
     let mut kernel: String = String::new();
-    let file: String = fs::read_to_string("/proc/version").unwrap();
+    let file: String = version().unwrap();
     for line in file.lines() {
         let vec: Vec<&str> = line.split(' ').collect();
         for (i, _) in vec.iter().enumerate().take(3) {
@@ -67,15 +77,31 @@ pub(crate) fn get_kernel() -> Data<String> {
             }
         }
     }
-    Data::new("kernel".to_string(), kernel)
+    Data::new("Kernel".to_string(), kernel)
+}
+
+pub(crate) fn get_cpuinfo() -> Data<String> {
+    let cpuinfo = cpuinfo().unwrap();
+    let cpu = format!("{} ({} threads)", cpuinfo[0].model_name(), cpuinfo.len());
+    Data::new("Cpu".to_string(), cpu)
 }
 
 pub(crate) fn get_uptime() -> Data<Uptime> {
-    let file: String = fs::read_to_string("/proc/uptime").unwrap();
-    let vec: Vec<&str> = file.split(' ').collect();
+    let uptime = uptime().unwrap();
+    Data::new("Uptime".to_string(), Uptime::new(*uptime.total()))
+}
 
-    let total_seconds = vec[0].to_string().parse().unwrap();
-    Data::new("uptime".to_string(), Uptime::new(total_seconds))
+pub(crate) fn get_meminfo() -> Data<String> {
+    let info = meminfo().unwrap();
+    // multiply by 1000 because we get a value in kB and convert takes a value in bytes
+    let total: usize = *info.get("MemTotal").unwrap() * 1000;
+    let used = total - info.get("MemAvailable").unwrap() * 1000;
+    let memstr = format!("{} / {} ({}%)", 
+        convert(used as f64),
+        convert(total as f64),
+        (used / total * 100) 
+    );
+    Data::new("Memory".to_string(), memstr)
 }
 
 pub(crate) fn get_shell() -> Data<String> {
@@ -86,7 +112,7 @@ pub(crate) fn get_shell() -> Data<String> {
     };
     let shell_path = path::Path::new(&shell_env).file_name().unwrap();
     Data::new(
-        "shell".to_string(),
+        "Shell".to_string(),
         shell_path
             .to_str()
             .unwrap_or_else(|| panic!("get_shell: parsing error"))

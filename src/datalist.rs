@@ -35,6 +35,8 @@ impl DataList {
                 Line::new(data::get_kernel()),
                 Line::new(data::get_uptime()),
                 Line::new(data::get_shell()),
+                Line::new(data::get_cpuinfo()),
+                Line::new(data::get_meminfo()),
                 Line::new(data::empty_line()),
                 Line::new(data::get_colors()),
             ],
