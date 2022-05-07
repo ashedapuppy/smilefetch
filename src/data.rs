@@ -4,13 +4,13 @@ use colored::Colorize;
 
 use crate::uptime::Uptime;
 
-pub struct Data<T> {
-    pub name: String,
-    pub value: T,
+pub(crate) struct Data<T> {
+    name: String,
+    value: T,
 }
 
 impl<T> Data<T> {
-    pub fn new(name: String, value: T) -> Self {
+    fn new(name: String, value: T) -> Self {
         Self { name, value }
     }
 }
@@ -25,24 +25,25 @@ where
 }
 
 pub(crate) fn get_colors() -> String {
+    let box_char = "██";
     format!(
         "{}{}{}{}{}{}{}{}\n{}{}{}{}{}{}{}{}",
-        "██".black(),
-        "██".red(),
-        "██".green(),
-        "██".yellow(),
-        "██".blue(),
-        "██".magenta(),
-        "██".cyan(),
-        "██".white(),
-        "██".bold().black(),
-        "██".bold().red(),
-        "██".bold().green(),
-        "██".bold().yellow(),
-        "██".bold().blue(),
-        "██".bold().magenta(),
-        "██".bold().cyan(),
-        "██".bold().white(),
+        box_char.black(),
+        box_char.red(),
+        box_char.green(),
+        box_char.yellow(),
+        box_char.blue(),
+        box_char.magenta(),
+        box_char.cyan(),
+        box_char.white(),
+        box_char.bold().black(),
+        box_char.bold().red(),
+        box_char.bold().green(),
+        box_char.bold().yellow(),
+        box_char.bold().blue(),
+        box_char.bold().magenta(),
+        box_char.bold().cyan(),
+        box_char.bold().white(),
     )
 }
 
@@ -78,6 +79,7 @@ pub(crate) fn get_uptime() -> Data<Uptime> {
 }
 
 pub(crate) fn get_shell() -> Data<String> {
+    // TODO: refactor this to be more straightforward (try to remove OsStr maybe?)
     let shell_env = match env::var("SHELL") {
         Ok(s) => s,
         Err(_) => panic!("get_shell: shell not set"),

@@ -15,15 +15,23 @@ struct Args {
     clear: bool,
 }
 
+fn clear_term() {
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    std::process::Command::new("clear").status().unwrap();
+
+    #[cfg(target_os = "windows")]
+    std::process::Command::new("cmd")
+        .arg("/C")
+        .arg("cls")
+        .status()
+        .unwrap();
+}
+
 fn main() {
     let args = Args::parse();
     let data = DataList::new();
     if args.clear {
-        if cfg!(unix) {
-            std::process::Command::new("clear").status().unwrap();
-        } else if cfg!(windows) {
-            std::process::Command::new("cls").status().unwrap();
-        }
+        clear_term();
     }
     println!("{}", data);
 }

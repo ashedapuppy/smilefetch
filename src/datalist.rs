@@ -7,7 +7,7 @@ use crate::data;
 type Line<T> = Box<T>;
 
 #[derive(Default)]
-pub struct DataList {
+pub(crate) struct DataList {
     pub lines: Vec<Line<dyn fmt::Display>>,
 }
 
@@ -22,7 +22,7 @@ impl fmt::Display for DataList {
 
 impl DataList {
     #[cfg(target_os = "linux")]
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             lines: vec![
                 Line::new(format!(
@@ -42,7 +42,7 @@ impl DataList {
     }
 
     #[cfg(target_os = "windows")]
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             lines: vec![
                 Line::new(format!(
