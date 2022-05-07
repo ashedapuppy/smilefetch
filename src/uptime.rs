@@ -67,7 +67,10 @@ impl fmt::Display for Uptime {
     /// If the number of days, hours, and minutes are all zero, then print the number of seconds, otherwise
     /// print the number of days, hours, and minutes properly formatted to only include relevant values.
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let out = format!("{}{}{}{}", self.days, self.hours, self.minutes, self.seconds);
+        let out = format!(
+            "{}{}{}{}",
+            self.days, self.hours, self.minutes, self.seconds
+        );
         write!(f, "{}", out.trim())
     }
 }
