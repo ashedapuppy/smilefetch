@@ -22,7 +22,7 @@ impl fmt::Display for DataList {
 
 impl DataList {
     #[cfg(target_os = "linux")]
-    pub(crate) fn new() -> Self {
+    pub(crate) fn default() -> Self {
         Self {
             lines: vec![
                 Line::new(format!(

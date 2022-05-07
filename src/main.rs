@@ -29,7 +29,7 @@ fn clear_term() {
 
 fn main() {
     let args = Args::parse();
-    let data = DataList::new();
+    let data = DataList::default();
     if args.clear {
         clear_term();
     }
