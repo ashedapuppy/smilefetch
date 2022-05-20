@@ -4,9 +4,10 @@ version = "0.3.0"
 edition = "2021"
 
 [dependencies]
+futures = "0.3"
 whoami = "1.2.1"
-sys-info = "0.9.1"
-proc_getter = "0.0.3"
+sysinfo = "0.23.12"
+
 pretty-bytes = "0.2.2"
 colored = "2.0.0"
 clap = { version = "3.1.6", features = ["derive"] }

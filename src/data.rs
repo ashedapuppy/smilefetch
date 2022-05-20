@@ -1,27 +1,22 @@
-use std::{env, fmt, path};
+use std::{env, fmt, path, error::Error};
 
-use proc_getter::cpuinfo::cpuinfo;
-use proc_getter::meminfo::meminfo;
-use proc_getter::uptime::uptime;
-use proc_getter::version::version;
-use pretty_bytes::converter::convert;
 use colored::Colorize;
-use sys_info;
+use sysinfo::{ProcessExt, ProcessorExt, System, SystemExt};
 
 use crate::uptime::Uptime;
 
 pub(crate) struct Data<T> {
-    name: String,
+    name: &'static str,
     value: T,
 }
 
 impl<T> Data<T> {
-    fn new(name: String, value: T) -> Self {
+    fn new(name: &'static str, value: T) -> Self {
         Self { name, value }
     }
 }
 
-impl<T> std::fmt::Display for Data<T>
+impl<T> fmt::Display for Data<T>
 where
     T: fmt::Display,
 {
@@ -57,65 +52,66 @@ pub(crate) fn empty_line() -> &'static str {
     "\n"
 }
 
-pub(crate) fn get_os() -> Data<String> {
-    let release = sys_info::linux_os_release().unwrap();
-    Data::new(
-        "Os".to_string(),
-        release.pretty_name.unwrap_or_else(|| release.name.unwrap()),
-    )
+pub(crate) fn get_os(sys: &mut System) -> Data<String> {
+    Data::new("Os", sys.long_os_version().unwrap())
 }
 
-pub(crate) fn get_kernel() -> Data<String> {
-    let mut kernel: String = String::new();
-    let file: String = version().unwrap();
-    for line in file.lines() {
-        let vec: Vec<&str> = line.split(' ').collect();
-        for (i, _) in vec.iter().enumerate().take(3) {
-            kernel.push_str(vec[i]);
-            if i != 2 {
-                kernel.push(' ')
-            }
-        }
-    }
-    Data::new("Kernel".to_string(), kernel)
+pub(crate) fn get_kernel(sys: &mut System) -> Data<String> {
+    Data::new("Kernel", sys.kernel_version().unwrap())
 }
 
-pub(crate) fn get_cpuinfo() -> Data<String> {
-    let cpuinfo = cpuinfo().unwrap();
-    let cpu = format!("{} ({} threads)", cpuinfo[0].model_name(), cpuinfo.len());
-    Data::new("Cpu".to_string(), cpu)
+pub(crate) fn get_cpuinfo(sys: &mut System) -> Data<String> {
+    let cpuinfo = sys.global_processor_info();
+    let cpu = format!("{} ({} MHz)", cpuinfo.brand(), cpuinfo.frequency());
+    Data::new("Cpu", cpu)
 }
 
-pub(crate) fn get_uptime() -> Data<Uptime> {
-    let uptime = uptime().unwrap();
-    Data::new("Uptime".to_string(), Uptime::new(*uptime.total()))
+pub(crate) fn get_uptime(sys: &mut System) -> Data<Uptime> {
+    Data::new("Uptime", Uptime::new(sys.uptime()))
 }
 
-pub(crate) fn get_meminfo() -> Data<String> {
-    let info = meminfo().unwrap();
-    // multiply by 1000 because we get a value in kB and convert takes a value in bytes
-    let total: usize = *info.get("MemTotal").unwrap() * 1000;
-    let used = total - info.get("MemAvailable").unwrap() * 1000;
-    let memstr = format!("{} / {} ({}%)", 
-        convert(used as f64),
-        convert(total as f64),
-        (used / total * 100) 
+pub(crate) fn get_meminfo(sys: &mut System) -> Data<String> {
+    let total = sys.total_memory() as f64;
+    let used = sys.used_memory() as f64;
+    let memstr = format!(
+        "{} used out of {} ({:.2}%)",
+        pretty_bytes::converter::convert(used * 1000f64),
+        pretty_bytes::converter::convert(total * 1000f64),
+        (used / total * 100f64)
     );
-    Data::new("Memory".to_string(), memstr)
+    Data::new("Memory", memstr)
 }
 
-pub(crate) fn get_shell() -> Data<String> {
-    // TODO: refactor this to be more straightforward (try to remove OsStr maybe?)
-    let shell_env = match env::var("SHELL") {
-        Ok(s) => s,
-        Err(_) => panic!("get_shell: shell not set"),
+fn get_shell_from_process(sys: &mut System) -> Result<String, Box<dyn Error>> {
+    let current = match sys.process(sysinfo::get_current_pid()?) {
+        Some(process) => process,
+        None => Err("Couldn't get current process")?,
     };
-    let shell_path = path::Path::new(&shell_env).file_name().unwrap();
-    Data::new(
-        "Shell".to_string(),
-        shell_path
-            .to_str()
-            .unwrap_or_else(|| panic!("get_shell: parsing error"))
-            .to_string(),
-    )
+    let parent = match sys.process(match current.parent() {
+            Some(parent) => parent,
+            None => Err("Couldn't get current process's parent")?,
+        }) 
+    {
+        Some(process) => process,
+        None => Err("no parent process")?
+    };
+    Ok(parent.name().to_string())
+}
+
+pub(crate) fn get_shell(sys: &mut System) -> Data<String> {
+    let shell_env = match env::var("SHELL") {
+        Ok(s) => Some(s),
+        Err(_) => None,
+    };
+    let shell_name: String;
+    if let Some(shell) = shell_env {
+        let shell_tmp = path::Path::new(&shell).file_name().unwrap();
+        shell_name = shell_tmp.to_str().unwrap().to_string();
+    } else {
+        shell_name = match get_shell_from_process(sys) {
+            Ok(shell) => shell,
+            Err(_) => String::from("shell not set")
+        };
+    }
+    Data::new("Shell", shell_name)
 }

@@ -1,19 +1,17 @@
 use std::fmt;
 pub(crate) struct Uptime {
-    days: Unit,
-    hours: Unit,
-    minutes: Unit,
-    seconds: Unit,
-    // might be useful later idk
-    _total_seconds: f64,
+    days: UUnit,
+    hours: UUnit,
+    minutes: UUnit,
+    seconds: UUnit,
 }
 
-struct Unit {
-    name: String,
-    value: i32,
+struct UUnit {
+    name: &'static str,
+    value: u16,
 }
 
-impl fmt::Display for Unit {
+impl fmt::Display for UUnit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
@@ -28,29 +26,29 @@ impl fmt::Display for Unit {
 }
 
 impl Uptime {
-    pub(crate) fn new(total_seconds: f64) -> Self {
-        let mut total_seconds_cp = total_seconds;
-        let days = Unit {
-            name: "day".to_string(),
-            value: (total_seconds_cp / (24f64 * 3600f64)) as i32,
+    pub(crate) fn new(total_seconds: u64) -> Self {
+        let mut total_seconds = total_seconds;
+        let days = UUnit {
+            name: "day",
+            value: (total_seconds / (24 * 3600)) as u16,
         };
-        total_seconds_cp %= 24f64 * 3600f64;
+        total_seconds %= 24 * 3600;
 
-        let hours = Unit {
-            name: "hour".to_string(),
-            value: (total_seconds_cp / 3600f64) as i32,
+        let hours = UUnit {
+            name: "hour",
+            value: (total_seconds / 3600) as u16,
         };
-        total_seconds_cp %= 3600f64;
+        total_seconds %= 3600;
 
-        let minutes = Unit {
-            name: "minute".to_string(),
-            value: (total_seconds_cp / 60f64) as i32,
+        let minutes = UUnit {
+            name: "minute",
+            value: (total_seconds / 60) as u16,
         };
-        total_seconds_cp %= 60f64;
+        total_seconds %= 60;
 
-        let seconds = Unit {
-            name: "second".to_string(),
-            value: total_seconds_cp as i32,
+        let seconds = UUnit {
+            name: "second",
+            value: total_seconds as u16,
         };
 
         Self {
@@ -58,7 +56,6 @@ impl Uptime {
             hours,
             minutes,
             seconds,
-            _total_seconds: total_seconds,
         }
     }
 }
