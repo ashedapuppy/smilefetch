@@ -1,14 +1,15 @@
 use std::fmt;
+
+struct UUnit {
+    name_singular: &'static str,
+    value: u16,
+}
+
 pub(crate) struct Uptime {
     days: UUnit,
     hours: UUnit,
     minutes: UUnit,
     seconds: UUnit,
-}
-
-struct UUnit {
-    name: &'static str,
-    value: u16,
 }
 
 impl fmt::Display for UUnit {
@@ -18,38 +19,54 @@ impl fmt::Display for UUnit {
             "{}",
             match self.value {
                 0 => String::new(),
-                1 => format!("1 {} ", &self.name),
-                n => format!("{n} {}s ", &self.name),
+                1 => format!("1 {} ", &self.name_singular),
+                n => format!("{n} {}s ", &self.name_singular),
             }
         )
+    }
+}
+
+impl UUnit {
+    fn days(value: u16) -> Self {
+        Self {
+            name_singular: "day",
+            value
+        }
+    }
+    fn hours(value: u16) -> Self {
+        Self {
+            name_singular: "hour",
+            value
+        }
+    }
+    fn minutes(value: u16) -> Self {
+        Self {
+            name_singular: "minute",
+            value
+        }
+    }
+    fn seconds(value: u16) -> Self {
+        Self {
+            name_singular: "second",
+            value
+        }
     }
 }
 
 impl Uptime {
     pub(crate) fn new(total_seconds: u64) -> Self {
         let mut total_seconds = total_seconds;
-        let days = UUnit {
-            name: "day",
-            value: (total_seconds / (24 * 3600)) as u16,
-        };
+
+        let days = UUnit::days((total_seconds / (24 * 3600)) as u16);
         total_seconds %= 24 * 3600;
 
-        let hours = UUnit {
-            name: "hour",
-            value: (total_seconds / 3600) as u16,
-        };
+        let hours = UUnit::hours((total_seconds / 3600) as u16);
         total_seconds %= 3600;
-
-        let minutes = UUnit {
-            name: "minute",
-            value: (total_seconds / 60) as u16,
-        };
+        
+        let minutes = UUnit::minutes((total_seconds / 60) as u16);
         total_seconds %= 60;
 
-        let seconds = UUnit {
-            name: "second",
-            value: total_seconds as u16,
-        };
+        let seconds = UUnit::seconds(total_seconds as u16);
 
         Self {
             days,
