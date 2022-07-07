@@ -2,12 +2,13 @@ use std::fmt;
 
 use colored::Colorize;
 use etc_passwd::Passwd;
-use sysinfo::{System, SystemExt, CpuExt};
+use sysinfo::{CpuExt, System, SystemExt};
 
 use crate::uptime::Uptime;
 
 pub(crate) struct Data<T> {
-    name: &'static str, value: T,
+    name: &'static str,
+    value: T,
 }
 
 impl<T> Data<T> {
