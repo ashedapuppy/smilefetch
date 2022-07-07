@@ -30,25 +30,25 @@ impl UUnit {
     fn days(value: u16) -> Self {
         Self {
             name_singular: "day",
-            value
+            value,
         }
     }
     fn hours(value: u16) -> Self {
         Self {
             name_singular: "hour",
-            value
+            value,
         }
     }
     fn minutes(value: u16) -> Self {
         Self {
             name_singular: "minute",
-            value
+            value,
         }
     }
     fn seconds(value: u16) -> Self {
         Self {
             name_singular: "second",
-            value
+            value,
         }
     }
 }
@@ -62,7 +62,7 @@ impl Uptime {
 
         let hours = UUnit::hours((total_seconds / 3600) as u16);
         total_seconds %= 3600;
-        
+
         let minutes = UUnit::minutes((total_seconds / 60) as u16);
         total_seconds %= 60;
 
