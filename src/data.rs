@@ -86,15 +86,12 @@ pub(crate) fn get_meminfo(sys: &mut System) -> Box<dyn fmt::Display> {
 }
 
 pub(crate) fn get_shell() -> Box<dyn fmt::Display> {
-    let passwd = Passwd::current_user();
-    if let Ok(Some(p)) = passwd {
-        return Box::new(Data::new(
-            "Shell",
-            p.shell
-                .to_str()
-                .unwrap_or_else(|_| "shell parsing error")
-                .to_owned(),
-        ));
+    let shell: Option<String> = match Passwd::current_user() {
+        Ok(Some(p)) => p.shell.to_str().map(|s| s.to_string()).ok(),
+        _ => None,
+    };
+    match shell {
+        Some(shell) => Box::new(Data::new("Shell", shell)),
+        None => Box::new(""),
     }
-    Box::new("")
 }
