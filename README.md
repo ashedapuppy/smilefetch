@@ -8,6 +8,10 @@
 
 A system info tool written in Rust inspired by neofetch
 
+## To-do:
+
+- [ ] Rewrite the project to be asynchronous
+
 ## Installation:
 
 ```sh
