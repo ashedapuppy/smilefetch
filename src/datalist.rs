@@ -1,7 +1,7 @@
-use std::fmt;
+use std::{fmt, sync::Arc};
 
-use colored::Colorize;
 use sysinfo::{System, SystemExt};
+use tokio::sync::Mutex;
 
 use crate::data;
 
@@ -19,26 +19,26 @@ impl fmt::Display for DataList {
 
 // TODO: build the datalist asynchronously
 impl DataList {
-    pub(crate) fn default() -> Self {
-        let mut sysinfo = System::new_all();
-        sysinfo.refresh_all();
-        Self(vec![
-            Box::new(format!(
-                "{}@{}\n",
-                whoami::username().bold().blue(),
-                sysinfo
-                    .host_name()
-                    .unwrap_or_else(|| "{error}".to_string())
-                    .bold()
-                    .blue()
-            )),
-            Box::new("\n"),
-            data::get_os(&mut sysinfo),
-            data::get_kernel(&mut sysinfo),
-            data::get_uptime(&mut sysinfo),
+    pub(crate) async fn default() -> Self {
+        let sysinfo_mutex = Arc::new(Mutex::new(System::new_all()));
+        let (user, os, kernel, uptime, shell, cpu, mem) = tokio::join!(
+            data::get_user(&sysinfo_mutex),
+            data::get_os(&sysinfo_mutex),
+            data::get_kernel(&sysinfo_mutex),
+            data::get_uptime(&sysinfo_mutex),
             data::get_shell(),
-            data::get_cpuinfo(&mut sysinfo),
-            data::get_meminfo(&mut sysinfo),
+            data::get_cpuinfo(&sysinfo_mutex),
+            data::get_meminfo(&sysinfo_mutex),
+        );
+        Self(vec![
+            user,
+            os,
+            kernel,
+            uptime,
+            shell,
+            cpu,
+            mem,
+            Box::new("\n"),
             Box::new("\n"),
             data::get_colors(),
         ])
