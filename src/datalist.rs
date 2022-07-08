@@ -17,9 +17,11 @@ impl fmt::Display for DataList {
     }
 }
 
+// TODO: build the datalist asynchronously
 impl DataList {
     pub(crate) fn default() -> Self {
         let mut sysinfo = System::new_all();
+        sysinfo.refresh_all();
         Self(vec![
             Box::new(format!(
                 "{}@{}\n",
