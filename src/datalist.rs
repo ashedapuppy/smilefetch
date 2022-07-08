@@ -24,7 +24,11 @@ impl DataList {
             Box::new(format!(
                 "{}@{}\n",
                 whoami::username().bold().blue(),
-                sysinfo.host_name().unwrap().bold().blue()
+                sysinfo
+                    .host_name()
+                    .unwrap_or_else(|| "{error}".to_string())
+                    .bold()
+                    .blue()
             )),
             Box::new("\n"),
             data::get_os(&mut sysinfo),
