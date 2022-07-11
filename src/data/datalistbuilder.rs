@@ -13,10 +13,9 @@ pub struct DataListBuilder {
 
 impl DataListBuilder {
     pub fn new() -> Self {
-        let sysinfo_mutex = System::new_all();
         Self {
             list: Vec::new(),
-            sysinfo: sysinfo_mutex,
+            sysinfo: System::new_all(),
         }
     }
 

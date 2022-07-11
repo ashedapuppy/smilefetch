@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         data::verify_infolist(&info_list)?;
         DataList::custom(&info_list)?
     } else {
-        DataList::default()
+        DataList::default()?
     };
     if args.clear {
         clear_term();

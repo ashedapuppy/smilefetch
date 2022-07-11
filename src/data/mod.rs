@@ -38,8 +38,9 @@ impl DataList {
         }
         Ok(builder.build())
     }
-    pub fn default() -> Self {
-        DataListBuilder::new()
+
+    pub fn default() -> Result<Self, Box<dyn Error>> {
+        Ok(DataListBuilder::new()
             .user()
             .os()
             .kernel()
@@ -49,7 +50,7 @@ impl DataList {
             .mem()
             .string("\n\n".to_string())
             .string(sysdata::get_colors())
-            .build()
+            .build())
     }
 }
 

@@ -5,7 +5,7 @@ struct TimeUnit {
     value: u16,
 }
 
-pub(crate) struct Uptime {
+pub struct Uptime {
     days: TimeUnit,
     hours: TimeUnit,
     minutes: TimeUnit,
@@ -51,7 +51,7 @@ impl TimeUnit {
 }
 
 impl Uptime {
-    pub(crate) fn new(total_seconds: u64) -> Self {
+    pub fn new(total_seconds: u64) -> Self {
         let mut total_seconds = total_seconds;
 
         let days = TimeUnit::days((total_seconds / (24 * 3600)) as u16);
