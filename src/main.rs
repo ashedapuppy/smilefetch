@@ -15,10 +15,13 @@ struct Args {
     #[clap(short = 'c', long = "clear")]
     clear: bool,
 
-    /// build the info in this order
+    /// build the infolist with a string
     ///
     /// possible info :
-    /// [user=u], [os=o], [kernel=k], [uptime=t], [shell=s], [cpu=c], [mem=m], [empty_line=e], [rainbow=r]
+    ///     [user=u]    [os=o]    [kernel=k]  [uptime=t],
+    ///     [shell=s]   [cpu=c]   [mem=m]     [empty_line=e],
+    ///     [rainbow=r]
+    #[clap(verbatim_doc_comment)]
     #[clap(short = 'i', long = "info")]
     info: Option<String>,
 }
@@ -39,7 +42,8 @@ fn clear_term() {
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
-    // if user gave custom info list, build it, otherwise use the default
+    // if user gave custom info list, build it,
+    // otherwise use the default
     let data = if let Some(info_list) = args.info {
         data::verify_infolist(&info_list)?;
         DataList::custom(&info_list)?
