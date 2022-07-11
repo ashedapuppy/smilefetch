@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{error::Error, fmt};
 
 use sysinfo::{System, SystemExt};
 
@@ -85,8 +85,25 @@ impl DataListBuilder {
     }
 }
 
-// TODO: build the datalist asynchronously
 impl DataList {
+    pub(crate) fn custom(info_list: &str) -> Result<Self, Box<dyn Error>> {
+        let mut builder = DataListBuilder::new();
+        for c in info_list.chars() {
+            builder = match c {
+                'u' => builder.user(),
+                'o' => builder.os(),
+                'k' => builder.kernel(),
+                't' => builder.uptime(),
+                's' => builder.shell(),
+                'c' => builder.cpu(),
+                'm' => builder.mem(),
+                'e' => builder.string("\n".to_string()),
+                'r' => builder.string(data::get_colors()),
+                _ => return Err("unrecognised option (info list verification failed)".into()),
+            };
+        }
+        Ok(builder.build())
+    }
     pub(crate) fn default() -> Self {
         DataListBuilder::new()
             .user()
