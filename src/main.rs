@@ -27,12 +27,11 @@ fn clear_term() {
         .unwrap();
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     let args = Args::parse();
     let data = DataList::default();
     if args.clear {
         clear_term();
     }
-    println!("{}", data.await);
+    println!("{}", data);
 }

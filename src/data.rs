@@ -1,9 +1,8 @@
-use std::{fmt, sync::Arc};
+use std::fmt;
 
 use colored::Colorize;
 use etc_passwd::Passwd;
 use sysinfo::{CpuExt, System, SystemExt};
-use tokio::sync::Mutex;
 
 use crate::uptime::Uptime;
 
@@ -27,9 +26,9 @@ where
     }
 }
 
-pub(crate) fn get_colors() -> Box<String> {
+pub(crate) fn get_colors() -> String {
     let box_char = "██";
-    Box::new(format!(
+    format!(
         "{}{}{}{}{}{}{}{}\n{}{}{}{}{}{}{}{}",
         box_char.black(),
         box_char.red(),
@@ -47,39 +46,34 @@ pub(crate) fn get_colors() -> Box<String> {
         box_char.bold().magenta(),
         box_char.bold().cyan(),
         box_char.bold().white(),
-    ))
+    )
 }
 
-pub(crate) async fn get_os(sys: &Arc<Mutex<System>>) -> Box<dyn fmt::Display> {
-    let sys = sys.lock().await;
+pub(crate) fn get_os(sys: &System) -> Box<dyn fmt::Display> {
     match sys.long_os_version() {
         Some(os) => Box::new(Data::new("Os", os)),
         None => Box::new(""),
     }
 }
 
-pub(crate) async fn get_kernel(sys: &Arc<Mutex<System>>) -> Box<dyn fmt::Display> {
-    let sys = sys.lock().await;
+pub(crate) fn get_kernel(sys: &System) -> Box<dyn fmt::Display> {
     match sys.kernel_version() {
         Some(kernel) => Box::new(Data::new("Kernel", kernel)),
         None => Box::new(""),
     }
 }
 
-pub(crate) async fn get_cpuinfo(sys: &Arc<Mutex<System>>) -> Box<dyn fmt::Display> {
-    let sys = sys.lock().await;
+pub(crate) fn get_cpuinfo(sys: &System) -> Box<dyn fmt::Display> {
     let cpuinfo = sys.cpus();
     let cpu = format!("{} ({} MHz)", cpuinfo[0].brand(), cpuinfo[0].frequency());
     Box::new(Data::new("Cpu", cpu))
 }
 
-pub(crate) async fn get_uptime(sys: &Arc<Mutex<System>>) -> Box<dyn fmt::Display> {
-    let sys = sys.lock().await;
+pub(crate) fn get_uptime(sys: &System) -> Box<dyn fmt::Display> {
     Box::new(Data::new("Uptime", Uptime::new(sys.uptime())))
 }
 
-pub(crate) async fn get_meminfo(sys: &Arc<Mutex<System>>) -> Box<dyn fmt::Display> {
-    let sys = sys.lock().await;
+pub(crate) fn get_meminfo(sys: &System) -> Box<dyn fmt::Display> {
     let total = sys.total_memory() as f64;
     let used = sys.used_memory() as f64;
     let memstr = format!(
@@ -91,7 +85,7 @@ pub(crate) async fn get_meminfo(sys: &Arc<Mutex<System>>) -> Box<dyn fmt::Displa
     Box::new(Data::new("Memory", memstr))
 }
 
-pub(crate) async fn get_shell() -> Box<dyn fmt::Display> {
+pub(crate) fn get_shell() -> Box<dyn fmt::Display> {
     let shell: Option<String> = match Passwd::current_user() {
         Ok(Some(p)) => p.shell.to_str().map(|s| s.to_string()).ok(),
         _ => None,
@@ -102,8 +96,7 @@ pub(crate) async fn get_shell() -> Box<dyn fmt::Display> {
     }
 }
 
-pub(crate) async fn get_user(sys: &Arc<Mutex<System>>) -> Box<dyn fmt::Display> {
-    let sys = sys.lock().await;
+pub(crate) fn get_user(sys: &System) -> Box<dyn fmt::Display> {
     Box::new(format!(
         "{}@{}\n",
         whoami::username().bold().blue(),
