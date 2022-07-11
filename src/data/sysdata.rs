@@ -6,7 +6,7 @@ use sysinfo::{CpuExt, System, SystemExt};
 
 use crate::uptime::Uptime;
 
-pub(crate) struct Data<T> {
+pub struct Data<T> {
     name: &'static str,
     value: T,
 }
@@ -26,7 +26,7 @@ where
     }
 }
 
-pub(crate) fn get_colors() -> String {
+pub fn get_colors() -> String {
     let box_char = "██";
     format!(
         "{}{}{}{}{}{}{}{}\n{}{}{}{}{}{}{}{}",
@@ -49,31 +49,31 @@ pub(crate) fn get_colors() -> String {
     )
 }
 
-pub(crate) fn get_os(sys: &System) -> Box<dyn fmt::Display> {
+pub fn get_os(sys: &System) -> Box<dyn fmt::Display> {
     match sys.long_os_version() {
         Some(os) => Box::new(Data::new("Os", os)),
         None => Box::new(""),
     }
 }
 
-pub(crate) fn get_kernel(sys: &System) -> Box<dyn fmt::Display> {
+pub fn get_kernel(sys: &System) -> Box<dyn fmt::Display> {
     match sys.kernel_version() {
         Some(kernel) => Box::new(Data::new("Kernel", kernel)),
         None => Box::new(""),
     }
 }
 
-pub(crate) fn get_cpuinfo(sys: &System) -> Box<dyn fmt::Display> {
+pub fn get_cpuinfo(sys: &System) -> Box<dyn fmt::Display> {
     let cpuinfo = sys.cpus();
     let cpu = format!("{} ({} MHz)", cpuinfo[0].brand(), cpuinfo[0].frequency());
     Box::new(Data::new("Cpu", cpu))
 }
 
-pub(crate) fn get_uptime(sys: &System) -> Box<dyn fmt::Display> {
+pub fn get_uptime(sys: &System) -> Box<dyn fmt::Display> {
     Box::new(Data::new("Uptime", Uptime::new(sys.uptime())))
 }
 
-pub(crate) fn get_meminfo(sys: &System) -> Box<dyn fmt::Display> {
+pub fn get_meminfo(sys: &System) -> Box<dyn fmt::Display> {
     let total = sys.total_memory() as f64;
     let used = sys.used_memory() as f64;
     let memstr = format!(
@@ -85,7 +85,7 @@ pub(crate) fn get_meminfo(sys: &System) -> Box<dyn fmt::Display> {
     Box::new(Data::new("Memory", memstr))
 }
 
-pub(crate) fn get_shell() -> Box<dyn fmt::Display> {
+pub fn get_shell() -> Box<dyn fmt::Display> {
     let shell: Option<String> = match Passwd::current_user() {
         Ok(Some(p)) => p.shell.to_str().map(|s| s.to_string()).ok(),
         _ => None,
@@ -96,7 +96,7 @@ pub(crate) fn get_shell() -> Box<dyn fmt::Display> {
     }
 }
 
-pub(crate) fn get_user(sys: &System) -> Box<dyn fmt::Display> {
+pub fn get_user(sys: &System) -> Box<dyn fmt::Display> {
     Box::new(format!(
         "{}@{}\n",
         whoami::username().bold().blue(),
