@@ -44,11 +44,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
     // if user gave custom info list, build it,
     // otherwise use the default
-    let data = if let Some(info_list) = args.info {
-        data::verify_infolist(&info_list)?;
-        DataList::custom(&info_list)?
-    } else {
-        DataList::default()?
+    let data = match args.info {
+        Some(info_list) => DataList::custom(&info_list)?,
+        None => DataList::default(),
     };
     if args.clear {
         clear_term();

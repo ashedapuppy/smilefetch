@@ -69,7 +69,11 @@ pub fn get_kernel(sys: &System) -> Box<dyn fmt::Display> {
 
 pub fn get_cpuinfo(sys: &System) -> Box<dyn fmt::Display> {
     let cpuinfo = sys.cpus();
-    let cpu = format!("{} ({} MHz)", cpuinfo[0].brand(), cpuinfo[0].frequency());
+    let cpu = format!(
+        "{} ({} MHz)",
+        replace_glyphs(cpuinfo[0].brand()),
+        cpuinfo[0].frequency()
+    );
     Box::new(Data::new("Cpu", cpu))
 }
 
@@ -114,4 +118,14 @@ pub fn get_user(sys: &System) -> Box<dyn fmt::Display> {
     } else {
         Box::new(format!("{}@{}\n", username, hostname))
     }
+}
+
+fn replace_glyphs(input: &str) -> String {
+    input
+        .replace("(TM)", "™")
+        .replace("(tm)", "™")
+        .replace("TM", "™")
+        .replace("tm", "™")
+        .replace("(R)", "®")
+        .replace("(r)", "®")
 }

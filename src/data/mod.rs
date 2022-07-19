@@ -21,46 +21,39 @@ impl fmt::Display for DataList {
 
 impl DataList {
     pub fn custom(info_list: &str) -> Result<Self, Box<dyn Error>> {
-        let mut builder = DataListBuilder::new();
+        let mut data_list_builder = DataListBuilder::new();
         for c in info_list.chars() {
-            builder = match c {
-                'u' => builder.user(),
-                'o' => builder.os(),
-                'k' => builder.kernel(),
-                't' => builder.uptime(),
-                's' => builder.shell(),
-                'c' => builder.cpu(),
-                'm' => builder.mem(),
-                'e' => builder.string("\n".to_string()),
-                'r' => builder.string(sysdata::get_colors()),
-                _ => return Err("unrecognised option (info list verification failed)".into()),
+            data_list_builder = match c {
+                'u' => data_list_builder.user(),
+                'o' => data_list_builder.os(),
+                'k' => data_list_builder.kernel(),
+                't' => data_list_builder.uptime(),
+                's' => data_list_builder.shell(),
+                'c' => data_list_builder.cpu(),
+                'm' => data_list_builder.mem(),
+                'e' => data_list_builder.string("\n".to_string()),
+                'r' => data_list_builder.string(sysdata::get_colors()),
+                unknown => {
+                    eprintln!("'{}' is not an available value (see --help)", unknown);
+                    return Err("error parsing info list".into());
+                }
             };
         }
-        Ok(builder.build())
+        Ok(data_list_builder.build())
     }
 
-    pub fn default() -> Result<Self, Box<dyn Error>> {
-        Ok(DataListBuilder::new()
+    pub fn default() -> Self {
+        DataListBuilder::new()
             .user()
+            .string("\n".to_string())
             .os()
             .kernel()
             .uptime()
             .shell()
             .cpu()
             .mem()
-            .string("\n\n".to_string())
+            .string("\n".to_string())
             .string(sysdata::get_colors())
-            .build())
+            .build()
     }
-}
-
-pub fn verify_infolist(info_list: &str) -> Result<(), Box<dyn Error>> {
-    let allowed = ['u', 'o', 'k', 't', 's', 'c', 'm', 'e', 'r'];
-    for c in info_list.chars() {
-        if !allowed.contains(&c) {
-            eprintln!("'{}' is not an available info (see --help)", &c);
-            return Err("error parsing info list".into());
-        }
-    }
-    Ok(())
 }

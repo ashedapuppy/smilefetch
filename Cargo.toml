@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 whoami = "1"
 sysinfo = "0.24"
-etc-passwd = "0.1"
+etc-passwd = "0.2"
 
 pretty-bytes = "0.2"
 colored = "2"
