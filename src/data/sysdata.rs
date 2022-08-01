@@ -22,12 +22,8 @@ where
     T: fmt::Display,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}:\t\t{}\n", self.name.bold().blue(), self.value)
+        writeln!(f, "{}:\t\t{}", self.name.bold().blue(), self.value)
     }
-}
-
-fn no_data() -> Box<&'static str> {
-    Box::new("")
 }
 
 pub fn get_colors() -> String {
@@ -56,14 +52,14 @@ pub fn get_colors() -> String {
 pub fn get_os(sys: &System) -> Box<dyn fmt::Display> {
     match sys.long_os_version() {
         Some(os) => Box::new(Data::new("Os", os)),
-        None => no_data(),
+        None => Box::new(""),
     }
 }
 
 pub fn get_kernel(sys: &System) -> Box<dyn fmt::Display> {
     match sys.kernel_version() {
         Some(kernel) => Box::new(Data::new("Kernel", kernel)),
-        None => no_data(),
+        None => Box::new(""),
     }
 }
 
@@ -101,7 +97,7 @@ pub fn get_shell() -> Box<dyn fmt::Display> {
     };
     match shell {
         Some(shell) => Box::new(Data::new("Shell", shell)),
-        None => no_data(),
+        None => Box::new(""),
     }
 }
 
@@ -114,7 +110,7 @@ pub fn get_user(sys: &System) -> Box<dyn fmt::Display> {
         .blue();
 
     if username.is_empty() || hostname.is_empty() {
-        no_data()
+        Box::new("")
     } else {
         Box::new(format!("{}@{}\n", username, hostname))
     }
