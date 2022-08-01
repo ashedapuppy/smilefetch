@@ -92,7 +92,7 @@ pub fn get_meminfo(sys: &System) -> Box<dyn fmt::Display> {
 
 pub fn get_shell() -> Box<dyn fmt::Display> {
     let shell: Option<String> = match Passwd::current_user() {
-        Ok(Some(p)) => p.shell.to_str().map(|s| s.to_string()).ok(),
+        Ok(Some(p)) => p.shell.to_str().map(std::string::ToString::to_string).ok(),
         _ => None,
     };
     match shell {
