@@ -12,7 +12,7 @@ struct Data<T> {
 }
 
 impl<T> Data<T> {
-    fn new(name: &'static str, value: T) -> Self {
+    const fn new(name: &'static str, value: T) -> Self {
         Self { name, value }
     }
 }

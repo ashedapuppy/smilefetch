@@ -13,7 +13,7 @@ pub struct DataList {
 impl fmt::Display for DataList {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for line in &self.list {
-            write!(f, "{}", line)?
+            write!(f, "{}", line)?;
         }
         Ok(())
     }
