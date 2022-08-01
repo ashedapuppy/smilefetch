@@ -1,7 +1,6 @@
 #![deny(clippy::all)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::nursery)]
-#![warn(clippy::cargo)]
 
 use std::error::Error;
 

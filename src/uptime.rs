@@ -27,22 +27,22 @@ impl fmt::Display for TimeUnit {
 }
 
 impl TimeUnit {
-    fn days(value: u16) -> Self {
+    const fn days(value: u16) -> Self {
         Self { name: "day", value }
     }
-    fn hours(value: u16) -> Self {
+    const fn hours(value: u16) -> Self {
         Self {
             name: "hour",
             value,
         }
     }
-    fn minutes(value: u16) -> Self {
+    const fn minutes(value: u16) -> Self {
         Self {
             name: "minute",
             value,
         }
     }
-    fn seconds(value: u16) -> Self {
+    const fn seconds(value: u16) -> Self {
         Self {
             name: "second",
             value,
@@ -51,7 +51,7 @@ impl TimeUnit {
 }
 
 impl Uptime {
-    pub fn new(total_seconds: u64) -> Self {
+    pub const fn new(total_seconds: u64) -> Self {
         let mut total_seconds = total_seconds;
 
         let days = TimeUnit::days((total_seconds / (24 * 3600)) as u16);
