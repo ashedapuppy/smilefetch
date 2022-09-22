@@ -8,6 +8,8 @@
 
 A system info tool written in Rust inspired by neofetch
 
+For a usable screenfetch rewrite in rust, I highly reccomend [macchina](https://github.com/Macchina-CLI/macchina)
+
 ## To-do:
 
 - [ ] Rewrite the project to be asynchronous
